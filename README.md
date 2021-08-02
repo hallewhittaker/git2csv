@@ -12,6 +12,8 @@
 
 If I add these lines of code, does it automatically update on github?!
 Answer: No it does not.
+If I add these lines of code, I have to manually commit it to github?!
+Answer: Yes.
 
 
 
