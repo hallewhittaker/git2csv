@@ -10,6 +10,9 @@
 - David says Hi!
 - Halle says Hi!
 
+If I add these lines of code, does it automatically update on github?!
+Answer: No it does not.
+
 
 
 
