@@ -6,7 +6,7 @@
 
      ![image](https://user-images.githubusercontent.com/88335095/127891138-2d1b6094-3c89-4317-b63d-ee3d5564ff5a.png)
 
- Say Hi if you are a contributor:
+- Say Hi if you are a contributor:
 - David says Hi!
 - Halle says Hi!
 
