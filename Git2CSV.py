@@ -1,11 +1,16 @@
 import subprocess
-test =["whittaler@gmail.com", "hello welcom"]
-testdictionary= {"email": "whittaker@gmail.com", "message": "hello welcom"}
+testdictionary1= {"email": "whittaker@gmail.com", "message": "hello welcom"}
+testdictionary2= {"email": "like@gmail.com", "message": "bye welcom"}
 
-print(test)
-print(test[0])
+#print(testdictionary1["email"])
+arrayofD= [testdictionary1,testdictionary2]
 
-print(testdictionary["email"])
+#print(arrayofD)
+
+for currentDictionary in arrayofD:
+    print(currentDictionary["email"])
+
+
 
 # r= subprocess.run('git --no-pager blame --line-porcelain README.md', stdout= subprocess.PIPE)
 #currently uses system command line to read a specific document.
