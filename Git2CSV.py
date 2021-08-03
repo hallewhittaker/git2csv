@@ -9,9 +9,6 @@ test_data = b"author hallewhittaker\nauthor-mail <88335095+hallewhittaker@users.
 tab = test_data.split(b'\t') 
 
 arrayofDictionaries = []
-# current string = b'author': b'author hallewhittaker' .split(b" ")[0]
-# new string = b'author': hallewhittaker'
-#b'author hallewhittaker': b'author hallewhittaker' without .split
 
 for lineinfoS in tab:
     #print(lineinfoS)
@@ -22,18 +19,27 @@ for lineinfoS in tab:
     for individL in linearray:
         #print(individL)
         splitline = individL.split(b" ")
-        tempkeyN = splitline[0]
-        #print(splitline) 
-        splitline[0] = (b" ")
+        tempkeyN = splitline[0].decode("utf-8")
+        splitline[0] = b" "
         
-        joinline = (b" ").join(splitline).lstrip()
+        joinline = b" ".join(splitline).lstrip()
         #print(joinline)
-        tempdictionary[tempkeyN] = joinline
+
+        tempdictionary[tempkeyN] = joinline.decode("utf-8")
     arrayofDictionaries.append(tempdictionary)
 print(arrayofDictionaries)
 
 
 
+
+
+
+#if str(arrayofDictionaries) == "[{b'author': b'hallewhittaker', b'author-mail': b'<88335095+hallewhittaker@users.noreply.github.com>', b'author-time': b'1627917128', b'author-tz': b'+0100', b'committer': b'GitHub', b'committer-mail': b'<noreply@github.com>', b'committer-time': b'1627917128', b'committer-tz': b'+0100', b'summary': b'Create README.md', b'boundary': b'', b'filename': b'README.md', b'': b''}, {b'--->': b'', b\"'\": b''}]":
+#    print("passed!")
+# else:
+#    print("FAILED!!!!")
+
+#byte string to string
 
 
 
