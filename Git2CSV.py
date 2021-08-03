@@ -24,9 +24,9 @@ for lineinfoS in tab:
         splitline = individL.split(b" ")
         tempkeyN = splitline[0]
         #print(splitline) 
-        splitline[0] = b" "
+        splitline[0] = (b" ")
         
-        joinline = b" ".join(splitline)
+        joinline = (b" ").join(splitline).lstrip()
         #print(joinline)
         tempdictionary[tempkeyN] = joinline
     arrayofDictionaries.append(tempdictionary)
