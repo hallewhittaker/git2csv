@@ -1,31 +1,24 @@
 import subprocess
-# r= subprocess.run('git --no-pager blame --line-porcelain README.md',s stdout= subprocess.PIPE)
+r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
 #currently uses system command line to read a specific document.
 
-# tab = r.stdout.split(b'\t') 
-# print(r.stdout)
-
-test_data = b"author hallewhittaker\nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>\nauthor-time 1627917128\nauthor-tz +0100\ncommitter GitHub\ncommitter-mail <noreply@github.com>\ncommitter-time 1627917128\ncommitter-tz +0100\nsummary Create README.md\nboundary\nfilename README.md\n\t--->\n'"
-tab = test_data.split(b'\t') 
+tab = r.stdout.split(b'\t') 
 
 arrayofDictionaries = []
 
 for lineinfoS in tab:
-    #print(lineinfoS)
     #print("----")
     linearray= lineinfoS.split(b'\n')
     tempdictionary = {}
 
     for individL in linearray:
-        #print(individL)
-        splitline = individL.split(b" ")
-        tempkeyN = splitline[0].decode("utf-8")
-        splitline[0] = b" "
-        
-        joinline = b" ".join(splitline).lstrip()
-        #print(joinline)
-
-        tempdictionary[tempkeyN] = joinline.decode("utf-8")
+        #print("____")
+        individL = individL.decode("utf-8")
+        splitline = individL.split(" ")
+        tempkeyN = splitline[0]
+        splitline[0] = " "
+        joinline = " ".join(splitline).lstrip()
+        tempdictionary[tempkeyN] = joinline
     arrayofDictionaries.append(tempdictionary)
 print(arrayofDictionaries)
 
@@ -39,17 +32,8 @@ print(arrayofDictionaries)
 # else:
 #    print("FAILED!!!!")
 
-#byte string to string
-
-
-
-
-
-#print(tempkeyN)
-
-        #print("____")
-
-
+# test_data = b"author hallewhittaker\nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>\nauthor-time 1627917128\nauthor-tz +0100\ncommitter GitHub\ncommitter-mail <noreply@github.com>\ncommitter-time 1627917128\ncommitter-tz +0100\nsummary Create README.md\nboundary\nfilename README.md\n\t--->\n'"
+# tab = test_data.split(b'\t') 
 
 #Using re.split
 # cheader =[]
