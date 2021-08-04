@@ -1,4 +1,3 @@
-from os import remove
 import subprocess
 r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
 
@@ -13,26 +12,22 @@ for lineinfoS in tab:
         individL = individL.decode("utf-8")
         splitline = individL.split(" ")
 
+        #Code for Finding Hash + Deleting Previous Hash eg: '12123526462jkgaz': '1 1 1' + Numbers
         for i in splitline[0]:
             if len(str(splitline[0])) == 40:
                 tempdictionary["Hash"] = splitline[0]
                 Number2D = splitline[0]
             for key,value in dict(tempdictionary).items():
                 if key == Number2D:
+                    tempdictionary["CommitLinesN"] = value
                     del tempdictionary[key]
 
         tempkeyN = splitline[0]
         splitline[0] = " "
-
         joinline = " ".join(splitline).lstrip()
 
-        for x in joinline:
-            if x in joinline == ('1 1 1'):
-                tempdictionary["CommitLinesN"] = joinline
-
         tempdictionary[tempkeyN] = joinline
-    arrayofDictionaries.append(tempdictionary)
-   
+    arrayofDictionaries.append(tempdictionary)  
 print(arrayofDictionaries)
 
 
@@ -44,8 +39,11 @@ print(arrayofDictionaries)
 
 
 
-
-
+#Code in progress for CommitLines
+        # for x in joinline:
+        #     if x in joinline == ('1 1 1'):
+        #         tempdictionary["CommitLinesN"] = joinline
+        # for x in joinline:
 #Manual Splitline
 # if i in splitline[0] ==('d6b24e6dec9eca5db2acfcb393a62146f640759f'): 
 #     tempdictionary["Hash"] = splitline[0]
@@ -59,7 +57,10 @@ print(arrayofDictionaries)
 #for i in splitline[0]:
 #    if len(str(splitline[0])) == 40:
 #               tempdictionary["Hash"] = splitline[0]
-
+#Automated Deletion of stuff
+# for key,value in dict(tempdictionary).items():
+#               if key == Number2D:
+#                    del tempdictionary[key]
 
 #Using Dictionaries
 # testdictionary1= {"email": "whittaker@gmail.com", "message": "hello welcom"}
