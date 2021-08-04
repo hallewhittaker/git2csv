@@ -1,7 +1,6 @@
 from os import remove
 import subprocess
 r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
-#currently uses system command line to read a specific document.
 
 tab = r.stdout.split(b'\t') 
 arrayofDictionaries = []
@@ -15,9 +14,13 @@ for lineinfoS in tab:
         splitline = individL.split(" ")
 
         for i in splitline[0]:
-            if i in splitline[0] ==('d6b24e6dec9eca5db2acfcb393a62146f640759f'): 
+            if len(str(splitline[0])) == 40:
                 tempdictionary["Hash"] = splitline[0]
-                
+                Number2D = splitline[0]
+            for key,value in dict(tempdictionary).items():
+                if key == Number2D:
+                    del tempdictionary[key]
+
         tempkeyN = splitline[0]
         splitline[0] = " "
 
@@ -25,35 +28,40 @@ for lineinfoS in tab:
 
         for x in joinline:
             if x in joinline == ('1 1 1'):
-                tempdictionary["LineNumbers"] = joinline
-        
-        for key,value in dict(tempdictionary).items():
-            if key == ('d6b24e6dec9eca5db2acfcb393a62146f640759f'):
-                    del tempdictionary[key]
-    
+                tempdictionary["CommitLinesN"] = joinline
+
         tempdictionary[tempkeyN] = joinline
     arrayofDictionaries.append(tempdictionary)
-    break
+   
 print(arrayofDictionaries)
 
 
 
+
+
+
+
+
+
+
+
+
+#Manual Splitline
+# if i in splitline[0] ==('d6b24e6dec9eca5db2acfcb393a62146f640759f'): 
+#     tempdictionary["Hash"] = splitline[0]
+
+#Manual Deltion of Hash
+# for key,value in dict(tempdictionary).items():
+#     if key == ('d6b24e6dec9eca5db2acfcb393a62146f640759f'):
+#             del tempdictionary[key]
+
+#Automated Checking of Hash
+#for i in splitline[0]:
+#    if len(str(splitline[0])) == 40:
+#               tempdictionary["Hash"] = splitline[0]
+
+
 #Using Dictionaries
-# testH = {}
-# Array1 = ["value1", "value2", "value3"]
-# testH["hash"] = Array1[1]
-# print(testH)
-
-
-
-
-
-
-
-
-
-
-
 # testdictionary1= {"email": "whittaker@gmail.com", "message": "hello welcom"}
 # testdictionary2= {"email": "like@gmail.com", "message": "bye welcom"}
 
@@ -63,10 +71,7 @@ print(arrayofDictionaries)
 # #print(arrayofD)
 
 # for currentDictionary in arrayofD:
-#     print(currentDictionary["email"])
-
-
-
+# print(currentDictionary["email"])
 
 
 #if str(arrayofDictionaries) == "[{b'author': b'hallewhittaker', b'author-mail': b'<88335095+hallewhittaker@users.noreply.github.com>', b'author-time': b'1627917128', b'author-tz': b'+0100', b'committer': b'GitHub', b'committer-mail': b'<noreply@github.com>', b'committer-time': b'1627917128', b'committer-tz': b'+0100', b'summary': b'Create README.md', b'boundary': b'', b'filename': b'README.md', b'': b''}, {b'--->': b'', b\"'\": b''}]":
