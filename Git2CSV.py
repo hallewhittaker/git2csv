@@ -11,23 +11,26 @@ for lineinfoS in tab:
     for individL in linearray:
         individL = individL.decode("utf-8")
         splitline = individL.split(" ")
-
-        #Code for Finding Hash + Deleting Previous Hash eg: '12123526462jkgaz': '1 1 1' + Numbers
+        
+        # if individL == "- 👋 Hi, I’m @hallewhittaker":
+        #     print("Passed TEST")
+        #     print(individL)
+        
         for i in splitline[0]:
             if len(str(splitline[0])) == 40:
                 tempdictionary["Hash"] = splitline[0]
                 Number2D = splitline[0]
+
             for key,value in dict(tempdictionary).items():
                 if key == Number2D:
                     tempdictionary["CommitLinesN"] = value
-                    del tempdictionary[key]
+                    del tempdictionary[key]  
 
         tempkeyN = splitline[0]
         splitline[0] = " "
         joinline = " ".join(splitline).lstrip()
-
         tempdictionary[tempkeyN] = joinline
-    arrayofDictionaries.append(tempdictionary)  
+    arrayofDictionaries.append(tempdictionary)
 print(arrayofDictionaries)
 
 
@@ -38,6 +41,23 @@ print(arrayofDictionaries)
 
 
 
+
+
+
+
+
+#Count digits calculator
+# str = "👋 Hi, I’m @hallewhittaker"
+# digit=letter=0
+# for ch in str:
+#    if ch.isdigit():
+#       digit=digit+1
+#    elif ch.isalpha():
+#       letter=letter+1
+#    else:
+#       pass
+# print("Letters:", letter)
+# print("Digits:", digit)
 
 #Code in progress for CommitLines
         # for x in joinline:
