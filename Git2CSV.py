@@ -8,40 +8,58 @@ arrayofDictionaries = []
 for lineinfoS in tab:
     linearray= lineinfoS.split(b'\n')
     tempdictionary = {}
-
-    originalLine = {}
-    finalLine={}
-    groupLine={}
     
     for individL in linearray:
         individL = individL.decode("utf-8")
-        splitline = individL.split(" ")
+        splitline = individL.split(" ")  # Could we maybe have a counter of some sort? Since "Hash" is always the "first" entry in individL
 
-        # Could we maybe have a counter of some sort? Since "Hash" is always the "first" entry in individL
         if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
             tempdictionary["Hash"] = splitline[0]
             Number2D = splitline[0]
 
         for key,value in dict(tempdictionary).items():
             if key == Number2D:
-                tempdictionary["CommitLinesN"] = value
+                for singleN in value:
+                    x = singleN.split(" ")
+                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[0], 'groupLine' : x[0]}
                 del tempdictionary[key]
                 
             testkey = list(tempdictionary.keys())[0]  
             if testkey != "Hash":
                 del tempdictionary[testkey]
 
-        # Maybe if the tempkeyN is equal to " " or "", don't add it =) 
-        tempkeyN = splitline[0]
+        
+        tempkeyN = splitline[0] # Maybe if the tempkeyN is equal to " " or "", don't add it =) 
         splitline[0] = " "
         joinline = " ".join(splitline).lstrip()
         tempdictionary[tempkeyN] = joinline
     arrayofDictionaries.append(tempdictionary)
+    break
 print(arrayofDictionaries)
 
 
+# value = {"1 2 3"}
 
 
+# s1= {}
+# s2 ={}
+# s3 ={}
+
+# tempdictionary["CommitLine"] = {s1, s2, s3}
+
+# for i in value:
+#     x = i.split(" ")
+#     print (x)
+
+# s1 = x[0]
+# print(s1)
+# s2 = x[1]
+# print(s2)
+# s3 = x[2]
+# print(s3)
+
+
+# print(CommitArray)
 
 
 
