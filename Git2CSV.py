@@ -10,12 +10,10 @@ for lineinfoS in tab:
     
     for individL in linearray:
         individL = individL.decode("utf-8")
+        if individL == ("- 👋 Hi, I’m @hallewhittaker"):            
+            individL = " "
         splitline = individL.split(" ")
-        
-        # if individL == "- 👋 Hi, I’m @hallewhittaker":
-        #     print("Passed TEST")
-        #     print(individL)
-        
+
         for i in splitline[0]:
             if len(str(splitline[0])) == 40:
                 tempdictionary["Hash"] = splitline[0]
@@ -24,14 +22,17 @@ for lineinfoS in tab:
             for key,value in dict(tempdictionary).items():
                 if key == Number2D:
                     tempdictionary["CommitLinesN"] = value
-                    del tempdictionary[key]  
+                    del tempdictionary[key]
+                if key == "":
+                    del tempdictionary[key] 
 
         tempkeyN = splitline[0]
         splitline[0] = " "
         joinline = " ".join(splitline).lstrip()
         tempdictionary[tempkeyN] = joinline
     arrayofDictionaries.append(tempdictionary)
-print(arrayofDictionaries)
+#print(arrayofDictionaries)
+
 
 
 
