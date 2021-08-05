@@ -19,51 +19,75 @@ for lineinfoS in tab:
 
         for key,value in dict(tempdictionary).items():
             if key == Number2D:
-                for singleN in value:
-                    x = singleN.split(" ")
-                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[0], 'groupLine' : x[0]}
+
+                x= value.split(" ")
+                for i in range(0, len(x)):
+                    x[i] = int(x[i])
+                if len(x) == 3:
+                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
+                else:
+                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : '' } 
+
                 del tempdictionary[key]
                 
             testkey = list(tempdictionary.keys())[0]  
             if testkey != "Hash":
                 del tempdictionary[testkey]
 
-        
         tempkeyN = splitline[0] # Maybe if the tempkeyN is equal to " " or "", don't add it =) 
         splitline[0] = " "
         joinline = " ".join(splitline).lstrip()
         tempdictionary[tempkeyN] = joinline
-    arrayofDictionaries.append(tempdictionary)
-    break
+    arrayofDictionaries.append(tempdictionary)    
 print(arrayofDictionaries)
 
 
-# value = {"1 2 3"}
-
-
-# s1= {}
-# s2 ={}
-# s3 ={}
-
-# tempdictionary["CommitLine"] = {s1, s2, s3}
-
-# for i in value:
-#     x = i.split(" ")
-#     print (x)
-
-# s1 = x[0]
-# print(s1)
-# s2 = x[1]
-# print(s2)
-# s3 = x[2]
-# print(s3)
-
-
-# print(CommitArray)
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# test_list = ['1', '4', '3', '6', '7']
+  
+# for i in range(0, len(test_list)):
+#     test_list[i] = int(test_list[i])
+      
+# print(test_list)
+
+# count = 0
+# for i in x:
+# count += 1
+# if count == 3:
+# tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
+# if count == 2:
+#     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : " " } 
+
+#Starting Conditions
+# for key,value in dict(tempdictionary).items():
+#             if key == Number2D:
+#                 for singleN in value:
+#                     x = singleN.split(" ")
+#                     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[0], 'groupLine' : x[0]}
+#                 del tempdictionary[key]
+                
+#             testkey = list(tempdictionary.keys())[0]  
+#             if testkey != "Hash":
+#                 del tempdictionary[testkey]
 
 
 
