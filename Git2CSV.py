@@ -5,7 +5,7 @@ r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subp
 
 tab = r.stdout.split(b'\t') 
 arrayofDictionaries = []
-
+ddcmdcasd
 for lineinfoS in tab:
     linearray= lineinfoS.split(b'\n')
     tempdictionary = {}
