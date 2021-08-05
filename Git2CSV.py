@@ -33,24 +33,16 @@ for lineinfoS in tab:
             testkey = list(tempdictionary.keys())[0]  
             if testkey != "Hash":
                 del tempdictionary[testkey]
-
-        tempkeyN = splitline[0] # Maybe if the tempkeyN is equal to " " or "", don't add it =) 
-        splitline[0] = " "
-        joinline = " ".join(splitline).lstrip()
-        tempdictionary[tempkeyN] = joinline
+                
+        tempkeyN = splitline[0]
+        if tempkeyN == "":
+            del tempkeyN
+        else:
+            splitline[0] = " "
+            joinline = " ".join(splitline).lstrip()
+            tempdictionary[tempkeyN] = joinline
     arrayofDictionaries.append(tempdictionary)    
 print(arrayofDictionaries)
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -77,24 +69,9 @@ print(arrayofDictionaries)
 # if count == 2:
 #     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : " " } 
 
-#Starting Conditions
-# for key,value in dict(tempdictionary).items():
-#             if key == Number2D:
-#                 for singleN in value:
-#                     x = singleN.split(" ")
-#                     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[0], 'groupLine' : x[0]}
-#                 del tempdictionary[key]
-                
-#             testkey = list(tempdictionary.keys())[0]  
-#             if testkey != "Hash":
-#                 del tempdictionary[testkey]
-
-
-
-
 
 #Count digits calculator
-# str = "👋 Hi, I’m @hallewhittaker"
+# str = "If I add these lines of code, does it automatically update on github?!"
 # digit=letter=0
 # for ch in str:
 #    if ch.isdigit():
