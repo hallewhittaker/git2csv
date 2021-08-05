@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
+#-*- coding: utf-8 -*-
 import subprocess
 r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
 
 tab = r.stdout.split(b'\t') 
 arrayofDictionaries = []
-
 
 for lineinfoS in tab:
     linearray= lineinfoS.split(b'\n')
@@ -11,29 +12,28 @@ for lineinfoS in tab:
     
     for individL in linearray:
         individL = individL.decode("utf-8")
-        splitline = individL.split(" ")  # Could we maybe have a counter of some sort? Since "Hash" is always the "first" entry in individL
-
+        splitline = individL.split(" ")  # Could we maybe have a counter of some sort? Hash always 1st entry on Individl
+        
         if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
             tempdictionary["Hash"] = splitline[0]
             Number2D = splitline[0]
 
         for key,value in dict(tempdictionary).items():
             if key == Number2D:
-
                 x= value.split(" ")
                 for i in range(0, len(x)):
                     x[i] = int(x[i])
                 if len(x) == 3:
                     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
                 else:
-                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : '' } 
+                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1] } 
+                del tempdictionary[key] 
 
-                del tempdictionary[key]
-                
             testkey = list(tempdictionary.keys())[0]  
             if testkey != "Hash":
+                tempdictionary["Changed"] = tempdictionary[testkey]
                 del tempdictionary[testkey]
-                
+
         tempkeyN = splitline[0]
         if tempkeyN == "":
             del tempkeyN
@@ -41,7 +41,7 @@ for lineinfoS in tab:
             splitline[0] = " "
             joinline = " ".join(splitline).lstrip()
             tempdictionary[tempkeyN] = joinline
-    arrayofDictionaries.append(tempdictionary)    
+    arrayofDictionaries.append(tempdictionary)
 print(arrayofDictionaries)
 
 
@@ -50,7 +50,13 @@ print(arrayofDictionaries)
 
 
 
+# This is the first commit data:
+# d6b24e6dec9eca5db2acfcb393a62146f640759f 1 1 1\nauthor hallewhittaker\nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>\nauthor-time 1627917128\nauthor-tz +0100\ncommitter GitHub\ncommitter-mail <noreply@github.com>\ncommitter-time 1627917128\ncommitter-tz +0100\nsummary Create README.md\nboundary\nfilename README.md
+# \n\t- \xf0\x9f\x91\x8b Hi, I\xe2\x80\x99m @hallewhittaker\n
 
+# this is the second commit data
+# 0755943ff1734715bfe150143982bc9ce02562d8 2 2 4\nauthor hallewhittaker\nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>\nauthor-time 1627919610\nauthor-tz +0100\ncommitter GitHub\ncommitter-mail <noreply@github.com>\ncommitter-time 1627919610\ncommitter-tz +0100\nsummary Halle added additional information.\nprevious d5e223cc949db03d3a8ad3b42d9451413a7181d4 README.md\nfilename README.md
+# \n\t- \xf0\x9f\x91\x80 I\xe2\x80\x99m interested in everything IT!\n
 
 
 
