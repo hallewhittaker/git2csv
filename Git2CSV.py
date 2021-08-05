@@ -4,28 +4,34 @@ r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subp
 tab = r.stdout.split(b'\t') 
 arrayofDictionaries = []
 
+
 for lineinfoS in tab:
     linearray= lineinfoS.split(b'\n')
     tempdictionary = {}
+
+    originalLine = {}
+    finalLine={}
+    groupLine={}
     
     for individL in linearray:
         individL = individL.decode("utf-8")
         splitline = individL.split(" ")
 
-        for i in splitline[0]:
-            if len(str(splitline[0])) == 40:
-                tempdictionary["Hash"] = splitline[0]
-                Number2D = splitline[0]
+        # Could we maybe have a counter of some sort? Since "Hash" is always the "first" entry in individL
+        if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
+            tempdictionary["Hash"] = splitline[0]
+            Number2D = splitline[0]
 
-            for key,value in dict(tempdictionary).items():
-                if key == Number2D:
-                    tempdictionary["CommitLinesN"] = value
-                    del tempdictionary[key]
-                    
-                testkey = list(tempdictionary.keys())[0]  
-                if testkey != "Hash":
-                    del tempdictionary[testkey]
+        for key,value in dict(tempdictionary).items():
+            if key == Number2D:
+                tempdictionary["CommitLinesN"] = value
+                del tempdictionary[key]
+                
+            testkey = list(tempdictionary.keys())[0]  
+            if testkey != "Hash":
+                del tempdictionary[testkey]
 
+        # Maybe if the tempkeyN is equal to " " or "", don't add it =) 
         tempkeyN = splitline[0]
         splitline[0] = " "
         joinline = " ".join(splitline).lstrip()
