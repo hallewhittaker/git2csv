@@ -5,58 +5,139 @@ r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subp
 
 tab = r.stdout.split(b'\t') 
 arrayofDictionaries = []
-ddcmdcasd
+
 for lineinfoS in tab:
-    linearray= lineinfoS.split(b'\n')
+    linearray= lineinfoS.split(b'\n') 
     tempdictionary = {}
-    
+
+    count = 0
     for individL in linearray:
-        individL = individL.decode("utf-8")
-        splitline = individL.split(" ")  # Could we maybe have a counter of some sort? Hash always 1st entry on Individl
+        count += 1
+        individL = individL.decode("utf-8") # Could we maybe have a counter of some sort? Hash always 1st entry on Individl
+        splitline = individL.split(" ") 
+
+        #if count == 1:
+        #   print(individL)
         
-        if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
-            tempdictionary["Hash"] = splitline[0]
-            Number2D = splitline[0]
+        print(count)
+        # for some reason it goes 1 to 13 (correct) then 1 to 14 for some??    
+            
 
-        for key,value in dict(tempdictionary).items():
-            if key == Number2D:
-                x= value.split(" ")
-                for i in range(0, len(x)):
-                    x[i] = int(x[i])
-                if len(x) == 3:
-                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
-                else:
-                    tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1] } 
-                del tempdictionary[key] 
+        # if count == 2:
+        #     print(individL)
 
-            testkey = list(tempdictionary.keys())[0]  
-            if testkey != "Hash":
-                tempdictionary["Changed"] = tempdictionary[testkey]
-                del tempdictionary[testkey]
+        
+        # if count == 1:
+        #     print(individL)
+        #Here the 1 shows all of the text seen in the document + the intial hash value
+        #Here the 2 shows all of the hash values in the document except the first one + Commit lines
+            
+#         if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
+#             tempdictionary["Hash"] = splitline[0]
+#             Number2D = splitline[0]
+            
+#         for key,value in dict(tempdictionary).items():
+#             if key == Number2D:
+#                 x= value.split(" ")
+#                 for i in range(0, len(x)):
+#                     x[i] = int(x[i])
+#                 if len(x) == 3:
+#                     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
+#                 else:
+#                     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1] } 
+#                 del tempdictionary[key] 
 
-        tempkeyN = splitline[0]
-        if tempkeyN == "":
-            del tempkeyN
-        else:
-            splitline[0] = " "
-            joinline = " ".join(splitline).lstrip()
-            tempdictionary[tempkeyN] = joinline
-    arrayofDictionaries.append(tempdictionary)
-print(arrayofDictionaries)
+#             testkey = list(tempdictionary.keys())[0]  
+#             if testkey != "Hash":
+#                 tempdictionary["Changed"] = tempdictionary[testkey]
+#                 del tempdictionary[testkey]
+
+#         tempkeyN = splitline[0]
+#         if tempkeyN == "":
+#             del tempkeyN
+#         else:
+#             splitline[0] = " "
+#             joinline = " ".join(splitline).lstrip()
+#             tempdictionary[tempkeyN] = joinline
+#     arrayofDictionaries.append(tempdictionary)
+#     break  
+# print(arrayofDictionaries)
+
+
+
+
+ 
+
+# print(test1)
+
+# count = 0
+# for i in test1:
+#     if i == ('\n'):
+#         count += 1
+
+# while count == 13:
+#     print (str(test1[12]) + "\t")
+        
+# print(count)
+
+# # x= test1.split('\n')
+# # print(x)
+
+# # nlines = test1.count('\n')
+# # print(nlines)
 
 
 
 
 
+#1 =13
+#b'd6b24e6dec9eca5db2acfcb393a62146f640759f 1 1 1
+# \nauthor hallewhittaker
+# \nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>
+# \nauthor-time 1627917128
+# \nauthor-tz +0100
+# \ncommitter GitHub
+# \ncommitter-mail <noreply@github.com>
+# \ncommitter-time 1627917128
+# \ncommitter-tz +0100
+# \nsummary Create README.md
+# \nboundary
+# \nfilename README.md
+# \n\t- \xf0\x9f\x91\x8b Hi, I\xe2\x80\x99m @hallewhittaker
+# \n
 
+#2=13
+#0755943ff1734715bfe150143982bc9ce02562d8 2 2 4
+# \nauthor hallewhittaker
+# \nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>
+# \nauthor-time 1627919610
+# \nauthor-tz +0100
+# \ncommitter GitHub
+# \ncommitter-mail <noreply@github.com>
+# \ncommitter-time 1627919610
+# \ncommitter-tz +0100
+# \nsummary Halle added additional information.
+# \nprevious d5e223cc949db03d3a8ad3b42d9451413a7181d4 README.md
+# \nfilename README.md
+# \n\t- \xf0\x9f\x91\x80 I\xe2\x80\x99m interested in everything IT!
+# \n
 
-# This is the first commit data:
-# d6b24e6dec9eca5db2acfcb393a62146f640759f 1 1 1\nauthor hallewhittaker\nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>\nauthor-time 1627917128\nauthor-tz +0100\ncommitter GitHub\ncommitter-mail <noreply@github.com>\ncommitter-time 1627917128\ncommitter-tz +0100\nsummary Create README.md\nboundary\nfilename README.md
-# \n\t- \xf0\x9f\x91\x8b Hi, I\xe2\x80\x99m @hallewhittaker\n
+#3= 13
+#0755943ff1734715bfe150143982bc9ce02562d8 3 3
+# \nauthor hallewhittaker
+# \nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>
+# \nauthor-time 1627919610
+# \nauthor-tz +0100
+# \ncommitter GitHub
+# \ncommitter-mail <noreply@github.com>
+# \ncommitter-time 1627919610
+# \ncommitter-tz +0100
+# \nsummary Halle added additional information.
+# \nprevious d5e223cc949db03d3a8ad3b42d9451413a7181d4 README.md
+# \nfilename README.md
+# \n\t- \xf0\x9f\x8c\xb1 I\xe2\x80\x99m currently learning how to spot security vulnerabilities in source code.
+# \n
 
-# this is the second commit data
-# 0755943ff1734715bfe150143982bc9ce02562d8 2 2 4\nauthor hallewhittaker\nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>\nauthor-time 1627919610\nauthor-tz +0100\ncommitter GitHub\ncommitter-mail <noreply@github.com>\ncommitter-time 1627919610\ncommitter-tz +0100\nsummary Halle added additional information.\nprevious d5e223cc949db03d3a8ad3b42d9451413a7181d4 README.md\nfilename README.md
-# \n\t- \xf0\x9f\x91\x80 I\xe2\x80\x99m interested in everything IT!\n
 
 
 
