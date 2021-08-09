@@ -4,31 +4,12 @@ import subprocess
 r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
 
 standard_out = r.stdout
-# tab = standard_out.split(b'\t')
-
 arrayofDictionaries = []
-
-# for lineinfoS in tab:
-
-# {'Hash': 'd6b24e6dec9eca5db2acfcb393a62146f640759f', 'CommitLinesN': {'originalLine': 10, 'finalLine': 25}, 'author': 'hallewhittaker', 'author-mail': '<88335095+hallewhittaker@users.noreply.github.com>', 'author-time': '1627917128', 'author-tz': '+0100', 'committer': 'GitHub', 'committer-mail': '<noreply@github.com>', 'committer-time': '1627917128', 'committer-tz': '+0100', 'summary': 'Create README.md', 'boundary': '', 'filename': 'README.md', '\t-': 'Halle says Hi!', 'previous': '0755943ff1734715bfe150143982bc9ce02562d8 README.md', '\t': '', '\tIf': 'I add these lines of code, I have to manually commit it to github?!', '\tAnswer:': 'Yes.', '\t<!---': '', '\thallewhittaker/hallewhittaker': 'is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.', '\tYou': 'can click the Preview link to take a look at your changes.', '\t--->': ''}]
-
-# 6b24e6dec9eca5db2acfcb393a62146f640759f
-# author        
-# author-mail   
-# author-time   
-# author-tz     
-# committer     
-# committer-mail
-# committer-time
-# committer-tz  
-# summary       
-# boundary      
-# filename      
-# \t
-
-
-
 linearray = standard_out.split(b'\n') 
+
+#Tabs DONE
+#Timezones 
+#TensureFlow
 
 count = 0
 tempdictionary = {}
@@ -38,35 +19,41 @@ for individL in linearray:
 
     temp_key_name = splitline[0]
 
-    print("Count is currently " + str(count))
-    print(individL)
+    #print("Count is currently " + str(count))
+    #print(individL)
 
     first_word_removed = splitline.copy()
     first_word_removed[0] = " "
     first_word_removed = " ".join(first_word_removed).lstrip()
 
     if count == 0:
-        tempdictionary["Hash"] = temp_key_name
-    elif count == 1 or count == 2 or count == 3:
+        tempdictionary["hash"] = temp_key_name
+    elif count >= 1 and count <= 11:
         tempdictionary[temp_key_name] = first_word_removed
-    # elif count == 2:
-    #     tempdictionary[splitline[0]] = first_word_removed
-    # elif count == 3:
-    #     tempdictionary[splitline[0]] = first_word_removed
-    
-    
-    
-
-    
-
+    elif count == 12:
+        commit_content_text = individL
+        if commit_content_text[0:2] == '\t-':
+            slice_string = commit_content_text[3:]
+            tempdictionary["commit_content"] = slice_string
+        elif commit_content_text[0:1] == '\t':
+            slice_string = commit_content_text[1:]
+            tempdictionary["commit_content"] = slice_string
+        else:
+            tempdictionary["commit_content"] = commit_content_text
 
     count += 1 # generally easier to have at the end
     if count >= 13: #using >= attempts to limit issues (defensive programming)
         arrayofDictionaries.append(tempdictionary)
         tempdictionary = {} # not technically needed, but probably easier for debugging and learning
         count = 0
-
 print("Final arrayofDictionaries = " + str(arrayofDictionaries))
+
+
+
+
+
+# elif count == 1 or count == 2 or count == 3 or count == 4 or count == 5 or count == 6 or count == 7 or count == 8 or count == 9 or count == 10 or count == 11:
+#elif count >= 1 and count <= 11:
 
 # tempdictionary = {}
 
@@ -168,37 +155,20 @@ print("Final arrayofDictionaries = " + str(arrayofDictionaries))
 # \n\t- \xf0\x9f\x91\x8b Hi, I\xe2\x80\x99m @hallewhittaker
 # \n
 
-#2=13
-#0755943ff1734715bfe150143982bc9ce02562d8 2 2 4
-# \nauthor hallewhittaker
-# \nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>
-# \nauthor-time 1627919610
-# \nauthor-tz +0100
-# \ncommitter GitHub
-# \ncommitter-mail <noreply@github.com>
-# \ncommitter-time 1627919610
-# \ncommitter-tz +0100
-# \nsummary Halle added additional information.
-# \nprevious d5e223cc949db03d3a8ad3b42d9451413a7181d4 README.md
-# \nfilename README.md
-# \n\t- \xf0\x9f\x91\x80 I\xe2\x80\x99m interested in everything IT!
-# \n
+# 6b24e6dec9eca5db2acfcb393a62146f640759f
+# author        
+# author-mail   
+# author-time   
+# author-tz     
+# committer     
+# committer-mail
+# committer-time
+# committer-tz  
+# summary       
+# boundary      
+# filename      
+# \t
 
-#3= 13
-#0755943ff1734715bfe150143982bc9ce02562d8 3 3
-# \nauthor hallewhittaker
-# \nauthor-mail <88335095+hallewhittaker@users.noreply.github.com>
-# \nauthor-time 1627919610
-# \nauthor-tz +0100
-# \ncommitter GitHub
-# \ncommitter-mail <noreply@github.com>
-# \ncommitter-time 1627919610
-# \ncommitter-tz +0100
-# \nsummary Halle added additional information.
-# \nprevious d5e223cc949db03d3a8ad3b42d9451413a7181d4 README.md
-# \nfilename README.md
-# \n\t- \xf0\x9f\x8c\xb1 I\xe2\x80\x99m currently learning how to spot security vulnerabilities in source code.
-# \n
 
 
 
