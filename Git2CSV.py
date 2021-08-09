@@ -7,10 +7,6 @@ standard_out = r.stdout
 arrayofDictionaries = []
 linearray = standard_out.split(b'\n') 
 
-#Tabs DONE
-#Timezones 
-#TensureFlow
-
 count = 0
 tempdictionary = {}
 for individL in linearray:
@@ -28,18 +24,31 @@ for individL in linearray:
 
     if count == 0:
         tempdictionary["hash"] = temp_key_name
+        commitNumbers = first_word_removed.split(" ") 
+        for i in range(0, len(commitNumbers)):
+            try:
+                commitNumbers[i] = int(commitNumbers[i])
+            except:
+                None
+
+        if len(commitNumbers) == 3:
+            tempdictionary["CommitLinesN"] = {'originalLine': commitNumbers[0], 'finalLine': commitNumbers[1], 'groupLine' : commitNumbers[2]}
+        elif len(commitNumbers) == 2:
+            tempdictionary["CommitLinesN"] = {'originalLine': commitNumbers[0], 'finalLine': commitNumbers[1] } 
+
+        #tempdictionary["commitlines"] = first_word_removed
     elif count >= 1 and count <= 11:
         tempdictionary[temp_key_name] = first_word_removed
     elif count == 12:
         commit_content_text = individL
         if commit_content_text[0:2] == '\t-':
             slice_string = commit_content_text[3:]
-            tempdictionary["commit_content"] = slice_string
+            tempdictionary["commit_content"] = slice_string.lstrip()
         elif commit_content_text[0:1] == '\t':
             slice_string = commit_content_text[1:]
-            tempdictionary["commit_content"] = slice_string
+            tempdictionary["commit_content"] = slice_string.lstrip()
         else:
-            tempdictionary["commit_content"] = commit_content_text
+            tempdictionary["commit_content"] = commit_content_text.lstrip()
 
     count += 1 # generally easier to have at the end
     if count >= 13: #using >= attempts to limit issues (defensive programming)
