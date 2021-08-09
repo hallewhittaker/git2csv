@@ -3,65 +3,86 @@
 import subprocess
 r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
 
-tab = r.stdout.split(b'\t') 
+standard_out = r.stdout
+# tab = standard_out.split(b'\t')
+
 arrayofDictionaries = []
 
-for lineinfoS in tab:
-    linearray= lineinfoS.split(b'\n') 
-    tempdictionary = {}
+# for lineinfoS in tab:
 
-    count = 0
-    for individL in linearray:
-        count += 1
-        individL = individL.decode("utf-8") # Could we maybe have a counter of some sort? Hash always 1st entry on Individl
-        splitline = individL.split(" ") 
+# {'Hash': 'd6b24e6dec9eca5db2acfcb393a62146f640759f', 'CommitLinesN': {'originalLine': 10, 'finalLine': 25}, 'author': 'hallewhittaker', 'author-mail': '<88335095+hallewhittaker@users.noreply.github.com>', 'author-time': '1627917128', 'author-tz': '+0100', 'committer': 'GitHub', 'committer-mail': '<noreply@github.com>', 'committer-time': '1627917128', 'committer-tz': '+0100', 'summary': 'Create README.md', 'boundary': '', 'filename': 'README.md', '\t-': 'Halle says Hi!', 'previous': '0755943ff1734715bfe150143982bc9ce02562d8 README.md', '\t': '', '\tIf': 'I add these lines of code, I have to manually commit it to github?!', '\tAnswer:': 'Yes.', '\t<!---': '', '\thallewhittaker/hallewhittaker': 'is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.', '\tYou': 'can click the Preview link to take a look at your changes.', '\t--->': ''}]
 
-        #if count == 1:
-        #   print(individL)
+# 6b24e6dec9eca5db2acfcb393a62146f640759f
+# author        
+# author-mail   
+# author-time   
+# author-tz     
+# committer     
+# committer-mail
+# committer-time
+# committer-tz  
+# summary       
+# boundary      
+# filename      
+# \t
+
+linearray= standard_out.split(b'\n') 
+tempdictionary = {}
+
+count = 0
+for individL in linearray:
+    count += 1
+    individL = individL.decode("utf-8") # Could we maybe have a counter of some sort? Hash always 1st entry on Individl
+    splitline = individL.split(" ") 
+
+    #if count == 1:
+    #   print(individL)
+    
+    #print(count)
+    # for some reason it goes 1 to 13 (correct) then 1 to 14??  
         
-        print(count)
-        # for some reason it goes 1 to 13 (correct) then 1 to 14 for some??    
-            
 
-        # if count == 2:
-        #     print(individL)
+    # if count == 2:
+    #     print(individL)
 
+    
+    # if count == 1:
+    #     print(individL)
+    #Here the 1 shows all of the text seen in the document + the intial hash value
+    #Here the 2 shows all of the hash values in the document except the first one + Commit lines
         
-        # if count == 1:
-        #     print(individL)
-        #Here the 1 shows all of the text seen in the document + the intial hash value
-        #Here the 2 shows all of the hash values in the document except the first one + Commit lines
-            
-#         if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
-#             tempdictionary["Hash"] = splitline[0]
-#             Number2D = splitline[0]
-            
-#         for key,value in dict(tempdictionary).items():
-#             if key == Number2D:
-#                 x= value.split(" ")
-#                 for i in range(0, len(x)):
-#                     x[i] = int(x[i])
-#                 if len(x) == 3:
-#                     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
-#                 else:
-#                     tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1] } 
-#                 del tempdictionary[key] 
+    if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
+        tempdictionary["Hash"] = splitline[0]
+        Number2D = splitline[0]
+        
+    for key,value in dict(tempdictionary).items():
+        if key == Number2D:
+            x= value.split(" ")
+            for i in range(0, len(x)):
+                x[i] = int(x[i])
+            if len(x) == 3:
+                tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
+            else:
+                tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1] } 
+            del tempdictionary[key] 
 
-#             testkey = list(tempdictionary.keys())[0]  
-#             if testkey != "Hash":
-#                 tempdictionary["Changed"] = tempdictionary[testkey]
-#                 del tempdictionary[testkey]
+        testkey = list(tempdictionary.keys())[0]  
+        if testkey != "Hash":
+            tempdictionary["Changed"] = tempdictionary[testkey]
+            del tempdictionary[testkey]
 
-#         tempkeyN = splitline[0]
-#         if tempkeyN == "":
-#             del tempkeyN
-#         else:
-#             splitline[0] = " "
-#             joinline = " ".join(splitline).lstrip()
-#             tempdictionary[tempkeyN] = joinline
-#     arrayofDictionaries.append(tempdictionary)
-#     break  
-# print(arrayofDictionaries)
+    tempkeyN = splitline[0]
+    # print(tempkeyN)
+    if tempkeyN == '\t-': 
+        tempdictionary["Message"] = splitline[1]
+        #del tempkeyN
+    else:
+        splitline[0] = " "
+        joinline = " ".join(splitline).lstrip()
+        tempdictionary[tempkeyN] = joinline
+arrayofDictionaries.append(tempdictionary)
+#break
+print(arrayofDictionaries)
 
 
 
