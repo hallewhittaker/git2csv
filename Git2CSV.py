@@ -31,17 +31,39 @@ arrayofDictionaries = []
 linearray = standard_out.split(b'\n') 
 
 count = 0
+tempdictionary = {}
 for individL in linearray:
+    individL = individL.decode("utf-8")
+    splitline = individL.split(" ") # might not always be needed for every line, but probably easier to do it anyway =) eg: tab iteration case won't need to split on the spaces, it'll split on the tab :) 
+
+    temp_key_name = splitline[0]
+
     print("Count is currently " + str(count))
     print(individL)
-    # print(linearray[count])
-    # print(individL == linearray[count])
+
+    first_word_removed = splitline.copy()
+    first_word_removed[0] = " "
+    first_word_removed = " ".join(first_word_removed).lstrip()
+
+    if count == 0:
+        tempdictionary["Hash"] = temp_key_name
+    elif count == 1 or count == 2 or count == 3:
+        tempdictionary[temp_key_name] = first_word_removed
+    # elif count == 2:
+    #     tempdictionary[splitline[0]] = first_word_removed
+    # elif count == 3:
+    #     tempdictionary[splitline[0]] = first_word_removed
+    
+    
+    
+
+    
+
 
     count += 1 # generally easier to have at the end
-
-    # reset counter after... 12 or 13 maybe? =) 
-    
-    if count == 13:
+    if count >= 13: #using >= attempts to limit issues (defensive programming)
+        arrayofDictionaries.append(tempdictionary)
+        tempdictionary = {} # not technically needed, but probably easier for debugging and learning
         count = 0
 
 print("Final arrayofDictionaries = " + str(arrayofDictionaries))
