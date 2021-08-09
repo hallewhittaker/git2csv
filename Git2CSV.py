@@ -26,63 +26,82 @@ arrayofDictionaries = []
 # filename      
 # \t
 
-linearray= standard_out.split(b'\n') 
-tempdictionary = {}
+
+
+linearray = standard_out.split(b'\n') 
 
 count = 0
 for individL in linearray:
-    count += 1
-    individL = individL.decode("utf-8") # Could we maybe have a counter of some sort? Hash always 1st entry on Individl
-    splitline = individL.split(" ") 
+    print("Count is currently " + str(count))
+    print(individL)
+    # print(linearray[count])
+    # print(individL == linearray[count])
 
-    #if count == 1:
-    #   print(individL)
+    count += 1 # generally easier to have at the end
+
+    # reset counter after... 12 or 13 maybe? =) 
     
-    #print(count)
-    # for some reason it goes 1 to 13 (correct) then 1 to 14??  
+    if count == 13:
+        count = 0
+
+print("Final arrayofDictionaries = " + str(arrayofDictionaries))
+
+# tempdictionary = {}
+
+# count = 0
+# for individL in linearray:
+#     count += 1
+#     individL = individL.decode("utf-8") # Could we maybe have a counter of some sort? Hash always 1st entry on Individl
+#     splitline = individL.split(" ") 
+
+#     #if count == 1:
+#     #   print(individL)
+    
+#     #print(count)
+#     # for some reason it goes 1 to 13 (correct) then 1 to 14??  
         
 
-    # if count == 2:
-    #     print(individL)
+#     # if count == 2:
+#     #     print(individL)
 
     
-    # if count == 1:
-    #     print(individL)
-    #Here the 1 shows all of the text seen in the document + the intial hash value
-    #Here the 2 shows all of the hash values in the document except the first one + Commit lines
+#     # if count == 1:
+#     #     print(individL)
+#     #Here the 1 shows all of the text seen in the document + the intial hash value
+#     #Here the 2 shows all of the hash values in the document except the first one + Commit lines
         
-    if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
-        tempdictionary["Hash"] = splitline[0]
-        Number2D = splitline[0]
+#     if len(str(splitline[0])) == 40: # What if another line happens to be 40 chars? =P
+#         tempdictionary["Hash"] = splitline[0]
+#         Number2D = splitline[0]
         
-    for key,value in dict(tempdictionary).items():
-        if key == Number2D:
-            x= value.split(" ")
-            for i in range(0, len(x)):
-                x[i] = int(x[i])
-            if len(x) == 3:
-                tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
-            else:
-                tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1] } 
-            del tempdictionary[key] 
+#     for key,value in dict(tempdictionary).items():
+#         if key == Number2D:
+#             x= value.split(" ")
+#             for i in range(0, len(x)):
+#                 x[i] = int(x[i])
+#             if len(x) == 3:
+#                 tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1], 'groupLine' : x[2]}
+#             else:
+#                 tempdictionary["CommitLinesN"] = {'originalLine': x[0], 'finalLine': x[1] } 
+#             del tempdictionary[key] 
 
-        testkey = list(tempdictionary.keys())[0]  
-        if testkey != "Hash":
-            tempdictionary["Changed"] = tempdictionary[testkey]
-            del tempdictionary[testkey]
+#         testkey = list(tempdictionary.keys())[0]  
+#         if testkey != "Hash":
+#             tempdictionary["Changed"] = tempdictionary[testkey]
+#             del tempdictionary[testkey]
 
-    tempkeyN = splitline[0]
-    # print(tempkeyN)
-    if tempkeyN == '\t-': 
-        tempdictionary["Message"] = splitline[1]
-        #del tempkeyN
-    else:
-        splitline[0] = " "
-        joinline = " ".join(splitline).lstrip()
-        tempdictionary[tempkeyN] = joinline
-arrayofDictionaries.append(tempdictionary)
-#break
-print(arrayofDictionaries)
+#     tempkeyN = splitline[0]
+#     # print(tempkeyN)
+#     if tempkeyN == '\t-': 
+#         tempdictionary["Message"] = splitline[1]
+#         #del tempkeyN
+#     else:
+#         splitline[0] = " "
+#         joinline = " ".join(splitline).lstrip()
+#         tempdictionary[tempkeyN] = joinline
+# arrayofDictionaries.append(tempdictionary)
+# #break
+# print(arrayofDictionaries)
 
 
 
