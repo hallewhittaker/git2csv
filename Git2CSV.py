@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
+import datetime
 import subprocess
 r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
 
@@ -14,10 +15,6 @@ for individL in linearray:
     splitline = individL.split(" ") # might not always be needed for every line, but probably easier to do it anyway =) eg: tab iteration case won't need to split on the spaces, it'll split on the tab :) 
 
     temp_key_name = splitline[0]
-
-    #print("Count is currently " + str(count))
-    #print(individL)
-
     first_word_removed = splitline.copy()
     first_word_removed[0] = " "
     first_word_removed = " ".join(first_word_removed).lstrip()
@@ -25,6 +22,7 @@ for individL in linearray:
     if count == 0:
         tempdictionary["hash"] = temp_key_name
         commitNumbers = first_word_removed.split(" ") 
+
         for i in range(0, len(commitNumbers)):
             try:
                 commitNumbers[i] = int(commitNumbers[i])
@@ -36,9 +34,30 @@ for individL in linearray:
         elif len(commitNumbers) == 2:
             tempdictionary["CommitLinesN"] = {'originalLine': commitNumbers[0], 'finalLine': commitNumbers[1] } 
 
-        #tempdictionary["commitlines"] = first_word_removed
     elif count >= 1 and count <= 11:
-        tempdictionary[temp_key_name] = first_word_removed
+        if count == 3:
+            int_time_author= int(first_word_removed)
+            date_author_time = datetime.datetime.fromtimestamp(int_time_author)  
+            new_format = date_author_time.strftime('%Y-%m-%d-%H:%M:%S') 
+            tempdictionary[temp_key_name] = new_format
+
+        elif count == 4:
+            # x= datetime.timezone(datetime.timedelta(hours=24), first_word_removed)
+            # int_tz_author= int(first_word_removed)
+            # date_author_tz = datetime.timezone(datetime.timedelta(hours=24))
+            tempdictionary[temp_key_name] = first_word_removed
+
+        elif count == 7:
+            int_time_commiter= int(first_word_removed)
+            date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)  
+            new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
+            tempdictionary[temp_key_name] = new_format2
+
+        elif count == 8:
+            tempdictionary[temp_key_name] = first_word_removed
+        else:
+            tempdictionary[temp_key_name] = first_word_removed
+
     elif count == 12:
         commit_content_text = individL
         if commit_content_text[0:2] == '\t-':
@@ -58,7 +77,20 @@ for individL in linearray:
 print("Final arrayofDictionaries = " + str(arrayofDictionaries))
 
 
-
+#'hash': 'd6b24e6dec9eca5db2acfcb393a62146f640759f', 
+# 'CommitLinesN': {'originalLine': 1, 'finalLine': 1, 'groupLine': 1}, 
+# 'author': 'hallewhittaker', 
+# 'author-mail': '<88335095+hallewhittaker@users.noreply.github.com>', 
+# 'author-time': '1627917128',  THIS
+# 'author-tz': '+0100', THIS
+# 'committer': 'GitHub',
+# 'committer-mail': '<noreply@github.com>', 
+# 'committer-time': '1627917128',  THIS
+# 'committer-tz': '+0100', ' THIS
+# summary': 'Create README.md',
+#  'boundary': '', 
+# 'filename': 'README.md',
+#  'commit_content': '👋 Hi, I’m @hallewhittaker'}
 
 
 # elif count == 1 or count == 2 or count == 3 or count == 4 or count == 5 or count == 6 or count == 7 or count == 8 or count == 9 or count == 10 or count == 11:
