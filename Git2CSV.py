@@ -38,26 +38,56 @@ for individL in linearray:
         if count == 3:
             int_time_author= int(first_word_removed)
             date_author_time = datetime.datetime.fromtimestamp(int_time_author)  
-            new_format = date_author_time.strftime('%Y-%m-%d-%H:%M:%S') 
-            tempdictionary[temp_key_name] = new_format
+            new_format = date_author_time #.strftime('%Y-%m-%d-%H:%M:%S')
+            tempdictionary["author-time"] = new_format
+            # tempdictionary[temp_key_name] = new_format
 
         elif count == 4:
+            
+           
+
+            
+            
+            new_format = tempdictionary["author-time"]
+            # new_format.add_time_zone_info(first_word_removed) # This is not a real function!
+
+            new_format = new_format.replace(tzinfo=datetime.timezone.utc) # TODO: Actually parse the timezone instead of blindly using utc!
+            # new_format = new_format.replace(tzinfo=to_timezome(first_word_removed))
+
+            # new_format_that_is_aware_of_timezone = datetime_with_timezone(new_format, )
+
+            # new_format = new_format_that_is_aware_of_timezone
+
+
+            # tempdictionary[""]
             # x= datetime.timezone(datetime.timedelta(hours=24), first_word_removed)
-            # int_tz_author= int(first_word_removed)
+            #int_tz_author= int(first_word_removed)
             # date_author_tz = datetime.timezone(datetime.timedelta(hours=24))
-            tempdictionary[temp_key_name] = first_word_removed
+            #x= datetime.datetime(int_tz_author, tzinfo=datetime.timezone.utc)
+
+            #x= datetime.datetime.strptime(first_word_removed, '%z')
+            #datetime_object = datetime.datetime.strptime(first_word_removed, '%z')
+
+            #date_author_time = tempdictionary["commit-time"]
+    
+            # tempdictionary[temp_key_name] = first_word_removed 
+            # this is just to prevent the syntax highlighter from giving us an error at the moment
+            # pass # remove this line as soon as you add any code above :) 
 
         elif count == 7:
             int_time_commiter= int(first_word_removed)
             date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)  
             new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
-            tempdictionary[temp_key_name] = new_format2
+            tempdictionary["commiter-time"] = new_format2
 
         elif count == 8:
             tempdictionary[temp_key_name] = first_word_removed
         else:
             tempdictionary[temp_key_name] = first_word_removed
 
+#datetime.datetime(1900, 1, 1, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(seconds=3600)))
+#'+0100'
+#'+01:00:00'
     elif count == 12:
         commit_content_text = individL
         if commit_content_text[0:2] == '\t-':
