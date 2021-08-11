@@ -3,7 +3,26 @@
 
 import datetime
 import subprocess
-r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
+
+z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
+stan_out = z.stdout
+
+finalArray = []
+filearray = stan_out.split(b'\n')
+
+for i in filearray:
+    x= i.decode("utf-8")
+    finalArray.append(x)
+
+print(finalArray)
+for i in finalArray:
+    if i == "":
+        del[i]
+
+print(finalArray)
+
+for i in finalArray:
+    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[0]),stdout= subprocess.PIPE)
 
 standard_out = r.stdout
 arrayofDictionaries = []
@@ -22,7 +41,7 @@ for individL in linearray:
     first_word_removed = splitline.copy()
     first_word_removed[0] = " "
     first_word_removed = " ".join(first_word_removed).lstrip()
-
+    
     if count == 0:
         tempdictionary["hash"] = temp_key_name
         commitNumbers = first_word_removed.split(" ") 
@@ -40,30 +59,27 @@ for individL in linearray:
 
     elif count >= 1 and count <= 11:
         if count == 3:
-            int_time_author= int(first_word_removed)
-            date_author_time = datetime.datetime.fromtimestamp(int_time_author)  
-            new_format = date_author_time.strftime('%Y-%m-%d %H:%M:%S')
-            tempdictionary["author-time"] = new_format
+            # int_time_author= int(first_word_removed)
+            # date_author_time = datetime.datetime.fromtimestamp(int_time_author)  
+            # new_format = date_author_time.strftime('%Y-%m-%d %H:%M:%S')
+            tempdictionary["author-time"] = first_word_removed
 
         elif count == 4:
-            #authordate =  datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').date()
-            #authortime = datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').time()
-            #mydatetz = datetime.datetime.combine(authordate, authortime, authortz)
-
-            authortz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
-            new_atz = datetime.timezone.tzname( authortz, None )
-            tempdictionary["author-tz"] = new_atz
+            # authortz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
+            # new_atz = datetime.timezone.tzname( authortz, None )
+            tempdictionary["author-tz"] = first_word_removed
   
         elif count == 7:
-            int_time_commiter= int(first_word_removed)
-            date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)  
-            new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
-            tempdictionary["commiter-time"] = new_format2
+            # int_time_commiter= int(first_word_removed)
+            # date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)  
+            # new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
+            tempdictionary["commiter-time"] = first_word_removed
 
         elif count == 8:
-            commitertz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
-            new_ctz = datetime.timezone.tzname( commitertz, None )
-            tempdictionary["commiter-tz"] = new_ctz
+            # commitertz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
+            # new_ctz = datetime.timezone.tzname( commitertz, None )
+            # tempdictionary["commiter-tz"] = new_ctz
+            tempdictionary["commiter-tz"] = first_word_removed
 
         else:
             tempdictionary[temp_key_name] = first_word_removed
@@ -73,7 +89,7 @@ for individL in linearray:
         if commit_content_text[0:2] == '\t-':
             slice_string = commit_content_text[3:]
             tempdictionary["commit_content"] = slice_string.lstrip()
-        elif commit_content_text[0:1] == '\t':
+        elif commit_content_text[0:1] == "\t":
             slice_string = commit_content_text[1:]
             tempdictionary["commit_content"] = slice_string.lstrip()
         else:
@@ -84,16 +100,34 @@ for individL in linearray:
         arrayofDictionaries.append(tempdictionary)
         tempdictionary = {} # not technically needed, but probably easier for debugging and learning
         count = 0
-print("Final arrayofDictionaries = " + str(arrayofDictionaries))
+#print("Final arrayofDictionaries = " + str(arrayofDictionaries))
 
 
 
+
+
+
+
+
+
+
+
+
+#authordate =  datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').date()
+#authortime = datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').time()
+#mydatetz = datetime.datetime.combine(authordate, authortime, authortz)
+
+#Git LS
+# x= subprocess.run('git ls-tree -r main --name-only',stdout= subprocess.PIPE)
+# print(x.stdout)
+# y= subprocess.run('git log --pretty=format: --name-only --diff-filter=A', stdout= subprocess.PIPE)
+# print(y.stdout)
 
 
  # tempauthordate = mydatetz.replace(tzinfo= authortz)
-            # new_format5 = tempauthordate#.strftime('%z')
-            #new_tz = datetime.timezone.tzname( authortz, None )
-            #tempdictionary["author-tz"] = new_tz
+# new_format5 = tempauthordate#.strftime('%z') 
+    #new_tz = datetime.timezone.tzname( authortz, None )
+    #tempdictionary["author-tz"] = new_tz
 
 # tempauthordate = date_author_time 
 # tempauthordate = tempauthordate.replace(tzinfo= authortz)
