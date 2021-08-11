@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
+
 import datetime
 import subprocess
 r= subprocess.run('git --no-pager blame --line-porcelain README.md',stdout= subprocess.PIPE)
@@ -8,9 +9,8 @@ standard_out = r.stdout
 arrayofDictionaries = []
 linearray = standard_out.split(b'\n') 
 
-# The next after finishing the after finishing the timezone stuff, will be to run git blame on *all* of the files in the folder, not just README.md.
+# will be to run git blame on *all* of the files in the folder, not just README.md.
 # The phase after of the project , will be writing the data out to a csv file.
-
 
 count = 0
 tempdictionary = {}
@@ -43,29 +43,31 @@ for individL in linearray:
             int_time_author= int(first_word_removed)
             date_author_time = datetime.datetime.fromtimestamp(int_time_author)  
             new_format = date_author_time.strftime('%Y-%m-%d %H:%M:%S')
-            tempdictionary["author-time"] = date_author_time
+            tempdictionary["author-time"] = new_format
 
         elif count == 4:
-            authordate =  datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').date()
-            authortime = datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').time()
+            #authordate =  datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').date()
+            #authortime = datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').time()
+            #mydatetz = datetime.datetime.combine(authordate, authortime, authortz)
+
             authortz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
-            mydatetz = datetime.datetime.combine(authordate, authortime, authortz)
-
-            tempauthordate = tempdictionary["author-time"] 
-            tempauthordate = tempauthordate.replace(tzinfo=datetime.timezone.utc)
-            tempdictionary["author-tz"] = tempauthordate
-
-            #print(mydatetz)
+            new_atz = datetime.timezone.tzname( authortz, None )
+            tempdictionary["author-tz"] = new_atz
   
         elif count == 7:
             int_time_commiter= int(first_word_removed)
             date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)  
             new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
             tempdictionary["commiter-time"] = new_format2
+
         elif count == 8:
-            tempdictionary[temp_key_name] = first_word_removed
+            commitertz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
+            new_ctz = datetime.timezone.tzname( commitertz, None )
+            tempdictionary["commiter-tz"] = new_ctz
+
         else:
             tempdictionary[temp_key_name] = first_word_removed
+
     elif count == 12:
         commit_content_text = individL
         if commit_content_text[0:2] == '\t-':
@@ -88,8 +90,19 @@ print("Final arrayofDictionaries = " + str(arrayofDictionaries))
 
 
 
+ # tempauthordate = mydatetz.replace(tzinfo= authortz)
+            # new_format5 = tempauthordate#.strftime('%z')
+            #new_tz = datetime.timezone.tzname( authortz, None )
+            #tempdictionary["author-tz"] = new_tz
 
+# tempauthordate = date_author_time 
+# tempauthordate = tempauthordate.replace(tzinfo= authortz)
+# new_format5 = tempauthordate.strftime('%Y-%m-%d %H:%M:%S %z')
+# tempdictionary["author-tz"] = new_format5
 
+# tempauthordate = tempdictionary["author-time"] 
+# tempauthordate = tempauthordate.replace(tzinfo=datetime.timezone.utc)
+# tempdictionary["author-tz"] = tempauthordate
 
 
 
