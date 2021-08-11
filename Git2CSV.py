@@ -8,6 +8,10 @@ standard_out = r.stdout
 arrayofDictionaries = []
 linearray = standard_out.split(b'\n') 
 
+# The next after finishing the after finishing the timezone stuff, will be to run git blame on *all* of the files in the folder, not just README.md.
+# The phase after of the project , will be writing the data out to a csv file.
+
+
 count = 0
 tempdictionary = {}
 for individL in linearray:
@@ -38,23 +42,103 @@ for individL in linearray:
         if count == 3:
             int_time_author= int(first_word_removed)
             date_author_time = datetime.datetime.fromtimestamp(int_time_author)  
-            new_format = date_author_time #.strftime('%Y-%m-%d-%H:%M:%S')
-            tempdictionary["author-time"] = new_format
-            # tempdictionary[temp_key_name] = new_format
+            new_format = date_author_time.strftime('%Y-%m-%d %H:%M:%S')
+            tempdictionary["author-time"] = date_author_time
 
         elif count == 4:
-            
-           
+            authordate =  datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').date()
+            authortime = datetime.datetime.strptime(new_format, '%Y-%m-%d %H:%M:%S').time()
+            authortz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
+            mydatetz = datetime.datetime.combine(authordate, authortime, authortz)
 
-            
-            
-            new_format = tempdictionary["author-time"]
-            # new_format.add_time_zone_info(first_word_removed) # This is not a real function!
+            tempauthordate = tempdictionary["author-time"] 
+            tempauthordate = tempauthordate.replace(tzinfo=datetime.timezone.utc)
+            tempdictionary["author-tz"] = tempauthordate
 
-            new_format = new_format.replace(tzinfo=datetime.timezone.utc) # TODO: Actually parse the timezone instead of blindly using utc!
+            #print(mydatetz)
+  
+        elif count == 7:
+            int_time_commiter= int(first_word_removed)
+            date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)  
+            new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
+            tempdictionary["commiter-time"] = new_format2
+        elif count == 8:
+            tempdictionary[temp_key_name] = first_word_removed
+        else:
+            tempdictionary[temp_key_name] = first_word_removed
+    elif count == 12:
+        commit_content_text = individL
+        if commit_content_text[0:2] == '\t-':
+            slice_string = commit_content_text[3:]
+            tempdictionary["commit_content"] = slice_string.lstrip()
+        elif commit_content_text[0:1] == '\t':
+            slice_string = commit_content_text[1:]
+            tempdictionary["commit_content"] = slice_string.lstrip()
+        else:
+            tempdictionary["commit_content"] = commit_content_text.lstrip()
+
+    count += 1 # generally easier to have at the end
+    if count >= 13: #using >= attempts to limit issues (defensive programming)
+        arrayofDictionaries.append(tempdictionary)
+        tempdictionary = {} # not technically needed, but probably easier for debugging and learning
+        count = 0
+print("Final arrayofDictionaries = " + str(arrayofDictionaries))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# dt = datetime.datetime.now()
+#             dt = dt.replace(tzinfo=datetime.timezone.utc)
+#             tempdictionary["author-tz"] = (dt.isoformat())
+
+
+
+ # new_format.add_time_zone_info(first_word_removed) # This is not a real function!
+
+            # Goal: have the timezone added (not just as a string like it currently is)
+            #new_format = new_format.replace(tzinfo=datetime.timezone.utc)# TODO: Actually parse the timezone instead of blindly using utc!, ADD timezone info to author time
+
+            # Line below is optional, up to you if you keep it
+            # tempdictionary["author-tz"] = convert_to_timezone(first_word_removed) # TODO: Make this a timezone object! 
             # new_format = new_format.replace(tzinfo=to_timezome(first_word_removed))
 
-            # new_format_that_is_aware_of_timezone = datetime_with_timezone(new_format, )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#datetime.datetime(1900, 1, 1, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(seconds=3600)))
+#'+0100'
+#'+01:00:00'
+
+# new_format_that_is_aware_of_timezone = datetime_with_timezone(new_format, )
 
             # new_format = new_format_that_is_aware_of_timezone
 
@@ -73,38 +157,6 @@ for individL in linearray:
             # tempdictionary[temp_key_name] = first_word_removed 
             # this is just to prevent the syntax highlighter from giving us an error at the moment
             # pass # remove this line as soon as you add any code above :) 
-
-        elif count == 7:
-            int_time_commiter= int(first_word_removed)
-            date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)  
-            new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
-            tempdictionary["commiter-time"] = new_format2
-
-        elif count == 8:
-            tempdictionary[temp_key_name] = first_word_removed
-        else:
-            tempdictionary[temp_key_name] = first_word_removed
-
-#datetime.datetime(1900, 1, 1, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(seconds=3600)))
-#'+0100'
-#'+01:00:00'
-    elif count == 12:
-        commit_content_text = individL
-        if commit_content_text[0:2] == '\t-':
-            slice_string = commit_content_text[3:]
-            tempdictionary["commit_content"] = slice_string.lstrip()
-        elif commit_content_text[0:1] == '\t':
-            slice_string = commit_content_text[1:]
-            tempdictionary["commit_content"] = slice_string.lstrip()
-        else:
-            tempdictionary["commit_content"] = commit_content_text.lstrip()
-
-    count += 1 # generally easier to have at the end
-    if count >= 13: #using >= attempts to limit issues (defensive programming)
-        arrayofDictionaries.append(tempdictionary)
-        tempdictionary = {} # not technically needed, but probably easier for debugging and learning
-        count = 0
-print("Final arrayofDictionaries = " + str(arrayofDictionaries))
 
 
 #'hash': 'd6b24e6dec9eca5db2acfcb393a62146f640759f', 
