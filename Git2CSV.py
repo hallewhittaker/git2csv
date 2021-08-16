@@ -1,6 +1,27 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
-# The phase after of the project , will be writing the data out to a csv file.
+
+#C:\Users\Whitt\hallewhittaker current folder
+#C:\Users\Whitt\hallewhittaker\Test Code subfolder in current folderr 
+
+import os 
+
+mydir = os.getcwd() 
+# mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker\\FormatFuzzer"
+mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker"
+# mydir_tmp = getFirstArgument() or if getFirstArgumentDoesNotExist() then mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker"
+mydir_new = os.chdir(mydir_tmp) 
+mydir = os.getcwd() 
+
+# First task: get this working in a terminal. =P Hint: you already have python installed, but it likely isn't in your computer's "PATH".
+# python3 Git2CSV.py (current argument, empty string give default value)
+
+# Second task, allow the user to specify what folder (as an argument) they want to run Git2CSV.py on, like either of this two commands:
+# python3 Git2CSV.py C:\Users\Whitt\hallewhittaker
+# python3 Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer
+
+#Third Task, fix bug (problem is with bytes)
+
 
 import datetime
 import subprocess
@@ -15,10 +36,6 @@ for i in filearray:
     x= i.decode("utf-8")
     finalArray.append(x)
 finalArray.remove("")
-
-#finalArray = ["README.md"]
-#finalArray = ["Git2CSV.py"]
-#finalArray = ["Hello.py"]
 
 for i in range(len(finalArray)):
     r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),stdout= subprocess.PIPE)
@@ -93,6 +110,13 @@ for i in range(len(finalArray)):
 
 
 
+
+
+#finalArray = ["README.md"]
+#finalArray = ["Git2CSV.py"]
+#finalArray = ["Hello.py"]
+
+# The phase after of the project , will be writing the data out to a csv file.
 #tempdictionary["commiter-tz"] = first_word_removed
 
 #new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
@@ -115,7 +139,3 @@ for i in range(len(finalArray)):
 #             else:
 #                 tempdictionary[temp_key_name] = first_word_removed
 #         count += 1 
-
-    #test all files
-    #fix count
-    #return to datetime
