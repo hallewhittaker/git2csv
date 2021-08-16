@@ -18,7 +18,7 @@ finalArray.remove("")
 
 #finalArray = ["README.md"]
 #finalArray = ["Git2CSV.py"]
-finalArray = ["Hello.py"]
+#finalArray = ["Hello.py"]
 
 for i in range(len(finalArray)):
     r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),stdout= subprocess.PIPE)
@@ -37,9 +37,6 @@ for i in range(len(finalArray)):
         first_word_removed[0] = " "
         first_word_removed = " ".join(first_word_removed).lstrip()
 
-        # print(individL)
-        #print("Adding key=" + temp_key_name + " at count=" + str(count) + " with first_word_removed=" + first_word_removed)
-
         if count == 0:
             tempdictionary["hash"] = temp_key_name
             commitNumbers = first_word_removed.split(" ") 
@@ -55,55 +52,70 @@ for i in range(len(finalArray)):
             elif len(commitNumbers) == 2:
                 tempdictionary["CommitLinesN"] = {'originalLine': commitNumbers[0], 'finalLine': commitNumbers[1] } 
         
-            # commit_content_text = individL
         elif count >= 1 and count <= 12:
             if count == 3:
-                # int_time_author= int(first_word_removed)
-                # date_author_time = datetime.datetime.fromtimestamp(int_time_author)  
+                int_time_author= int(first_word_removed)
+                date_author_time = datetime.datetime.fromtimestamp(int_time_author)   
+                tempdictionary["author-time"] = date_author_time 
                 
-                # new_format = date_author_time.strftime('%Y-%m-%d %H:%M:%S')
-                # tempdictionary["author-time"] = new_format
-                
-                # tempdictionary["author-time"] = date_author_time #native datetime
-                
-                tempdictionary["author-time"] = first_word_removed
             elif count == 4:
-                # authortz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
-                # new_atz = datetime.timezone.tzname( authortz, None )
-                # tempdictionary["author-tz"] = new_atz
-                # tempdictionary["author-time"].replace(tzinfo=authortz)
-                
-                tempdictionary["author-tz"] = first_word_removed
+                authortz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
+                new_atz = datetime.timezone.tzname( authortz, None )
+                tempdictionary["author-tz"] = new_atz
+                tempdictionary["author-time"].replace(tzinfo=authortz)
+        
             elif count == 7:
-                # int_time_commiter= int(first_word_removed)
-                # date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)
-                  
-                #new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
-                #tempdictionary["commiter-time"] = new_format2
-                
-                #tempdictionary["commiter-time"] = date_commiter_time
-                tempdictionary["commiter-time"] = first_word_removed
+                int_time_commiter= int(first_word_removed)
+                date_commiter_time = datetime.datetime.fromtimestamp(int_time_commiter)
+                tempdictionary["commiter-time"] = date_commiter_time
+    
             elif count == 8:
-                # commitertz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
-                # new_ctz = datetime.timezone.tzname( commitertz, None )
-                # tempdictionary["commiter-tz"] = new_ctz
-                # tempdictionary["commiter-time"].replace(tzinfo=commitertz)
-                tempdictionary["commiter-tz"] = first_word_removed
+                commitertz = datetime.datetime.strptime(first_word_removed,'%z').tzinfo
+                new_ctz = datetime.timezone.tzname( commitertz, None )
+                tempdictionary["commiter-tz"] = new_ctz
+                tempdictionary["commiter-time"].replace(tzinfo=commitertz)
             
             elif individL[0:1] == '\t':
                 slice_string = individL[1:]
-                tempdictionary["commit_content"] = slice_string
-                arrayofDictionaries.append(tempdictionary)
-                tempdictionary = {} # not technically needed, but probably easier for debugging and learning
-                count = -1 
-            # elif ((count == 12) and ("boundary" in tempdictionary) or ("previous" in tempdictionary)):
-            #     commit_content_text = individL
-            #     slice_string = commit_content_text[1:]
-            #     tempdictionary["commit_content"] = slice_string
+                tempdictionary["commit_content"] = slice_string.lstrip()
+
             else:
                 tempdictionary[temp_key_name] = first_word_removed
-               
-        count += 1
-        # if count >= 13: 
-            
+
+        count += 1 
+        for key,value in dict(tempdictionary).items():
+            if key == "commit_content":
+                arrayofDictionaries.append(tempdictionary)
+                tempdictionary = {} 
+                count = 0 
     print("Final Array:" + str(arrayofDictionaries))
+
+
+
+
+#tempdictionary["commiter-tz"] = first_word_removed
+
+#new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
+                #tempdictionary["commiter-time"] = new_format2
+                #tempdictionary["commiter-time"] = first_word_removed
+#tempdictionary["author-tz"] = first_word_removed
+
+# new_format = date_author_time.strftime('%Y-%m-%d %H:%M:%S')
+                # tempdictionary["author-time"] = new_format
+                #tempdictionary["author-time"] = first_word_removed
+
+#  elif individL[0:1] == '\t':
+#                 slice_string = individL[1:]
+#                 tempdictionary["commit_content"] = slice_string
+
+#                 # arrayofDictionaries.append(tempdictionary)
+#                 # tempdictionary = {}
+#                 # count = -1 # this seems like a bad workaround :P 
+
+#             else:
+#                 tempdictionary[temp_key_name] = first_word_removed
+#         count += 1 
+
+    #test all files
+    #fix count
+    #return to datetime
