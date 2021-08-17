@@ -1,26 +1,27 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
-#C:\Users\Whitt\hallewhittaker current folder
-#C:\Users\Whitt\hallewhittaker\Test Code subfolder in current folderr 
-
 import os 
+import sys
 
-mydir = os.getcwd() 
-# mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker\\FormatFuzzer"
-mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker"
-# mydir_tmp = getFirstArgument() or if getFirstArgumentDoesNotExist() then mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker"
-mydir_new = os.chdir(mydir_tmp) 
-mydir = os.getcwd() 
+n = len(sys.argv)
+ 
+if len(sys.argv) > 1:
+    mydir = os.getcwd() 
+    mydir_tmp = sys.argv[1]
+    mydir_new = os.chdir(mydir_tmp) 
+    mydir = os.getcwd() 
+else:
+    mydir = os.getcwd() 
+    mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker"
+    mydir_new = os.chdir(mydir_tmp) 
+    mydir = os.getcwd()
 
-# First task: get this working in a terminal. =P Hint: you already have python installed, but it likely isn't in your computer's "PATH".
-# python3 Git2CSV.py (current argument, empty string give default value)
 
-# Second task, allow the user to specify what folder (as an argument) they want to run Git2CSV.py on, like either of this two commands:
-# python3 Git2CSV.py C:\Users\Whitt\hallewhittaker
-# python3 Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer
+#Fourth Task, fix bug (problem is with bytes)
+#UnicodeDecodeError: 'utf-8' codec can't decode byte 0x9c in position 9: invalid start byte with utf-8
+#UnicodeDecodeError: 'utf-32-le' codec can't decode bytes in position 0-3: code point not in range(0x110000)
 
-#Third Task, fix bug (problem is with bytes)
 
 
 import datetime
@@ -110,32 +111,16 @@ for i in range(len(finalArray)):
 
 
 
+# First task: get this working in a terminal. =P Hint: you already have python installed, but it likely isn't in your computer's "PATH".
+# python3 Git2CSV.py (current argument, empty string give default value)
 
+# python_script = sys.argv[0]
+# python_argument = sys.argv[1]
 
-#finalArray = ["README.md"]
-#finalArray = ["Git2CSV.py"]
-#finalArray = ["Hello.py"]
+#Manual Directory Paths
+# mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker\\FormatFuzzer" #runs formatfuzzer
+# mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker" #runs Git2CSV
 
-# The phase after of the project , will be writing the data out to a csv file.
-#tempdictionary["commiter-tz"] = first_word_removed
-
-#new_format2 = date_commiter_time.strftime('%Y-%m-%d-%H:%M:%S') 
-                #tempdictionary["commiter-time"] = new_format2
-                #tempdictionary["commiter-time"] = first_word_removed
-#tempdictionary["author-tz"] = first_word_removed
-
-# new_format = date_author_time.strftime('%Y-%m-%d %H:%M:%S')
-                # tempdictionary["author-time"] = new_format
-                #tempdictionary["author-time"] = first_word_removed
-
-#  elif individL[0:1] == '\t':
-#                 slice_string = individL[1:]
-#                 tempdictionary["commit_content"] = slice_string
-
-#                 # arrayofDictionaries.append(tempdictionary)
-#                 # tempdictionary = {}
-#                 # count = -1 # this seems like a bad workaround :P 
-
-#             else:
-#                 tempdictionary[temp_key_name] = first_word_removed
-#         count += 1 
+#Commands to specify folder
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker 
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer 
