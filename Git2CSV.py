@@ -17,7 +17,7 @@ if len(sys.argv) > 1:
     mydir = os.getcwd() 
 else:
     mydir = os.getcwd() 
-    mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker"
+    mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker" # TODO: Figure out why it's not working :p 
     mydir_new = os.chdir(mydir_tmp) 
     mydir = os.getcwd()
 
@@ -103,27 +103,63 @@ for i in range(len(finalArray)):
                 count = 0
     print("Final Array:" + str(arrayofDictionaries))
 
-# aDict = str(arrayofDictionaries) # nope, we don't want to convert everything to a string yet! :P 
-jsonString = json.dumps(arrayofDictionaries)
-jsonFile = open("data.json", "w")
-jsonFile.write(jsonString)
-jsonFile.close()
+# def myconverter(k):
+#     if isinstance(k, datetime.datetime):
+#         return k.__repr__()
+# jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
+
+# if len(sys.argv) > 2:
+#     filename_json= sys.argv[2]
+#     jsonFile = open(filename_json, "w+")
+#     jsonFile.write(jsonstring)
+# else:
+#     filename_json= "data.json"
+#     jsonFile = open(filename_json, "w+")
+#     jsonFile.write(jsonstring)
+# jsonFile.close()
+  
+    
+
+
 
 fieldnames = ['hash','CommitLinesN', 'author','author-mail','author-time','author-tz','committer','committer-mail', 'commiter-time','commiter-tz','summary', 'previous', 'boundary', 'filename','commit_content']
 rows = arrayofDictionaries
 
-# woot woot, this looks good!
-with open('TestCSV.csv', 'w+', encoding='ISO-8859-1', newline='') as f:
-    writer = csv.DictWriter(f, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerows(rows)
+if len(sys.argv) > 2:
+    filename_csv = sys.argv[2]
+    with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: # woot woot, this looks good!
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+else:
+    filename_csv = 'TestCSV.csv'
+    with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: 
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
 
-#TypeError: Object of type datetime is not JSON serializable
-#To ensure its correct hash/tempdictionary should be blue// not all one colour ie: not a big string
 
 
-# python_script = sys.argv[0]
-# python_argument = sys.argv[1]
+
+#Task 2
+#Similar to how we allow the first argument to be a folder, could we do the same for the output file? :) 
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer filename_csv
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer filename_json
+
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Works, prints ALL data though)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv (Works, prints ALL data though
+
+#Task 3
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer testfile.csv
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer testfile.json
+#Allow the user to basically choose which file to append to
+
+#Task 4
+#Why isnt it writing the same way as README.md?? (csv)
+
+#Task 5
+#Why isnt it writing the same way as README.md?? (json)
+
 
 #Manual Directory Paths
 # mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker\\FormatFuzzer" #runs formatfuzzer
@@ -135,7 +171,7 @@ with open('TestCSV.csv', 'w+', encoding='ISO-8859-1', newline='') as f:
 
 #Commands to specify output
 #py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee data.json
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json (works)
 #py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee TestCSV.csv
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv (works)
 
