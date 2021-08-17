@@ -101,58 +101,54 @@ for i in range(len(finalArray)):
                 arrayofDictionaries.append(tempdictionary)
                 tempdictionary = {} 
                 count = 0
+        #break
     print("Final Array:" + str(arrayofDictionaries))
 
-# def myconverter(k):
-#     if isinstance(k, datetime.datetime):
-#         return k.__repr__()
-# jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
-
-# if len(sys.argv) > 2:
-#     filename_json= sys.argv[2]
-#     jsonFile = open(filename_json, "w+")
-#     jsonFile.write(jsonstring)
-# else:
-#     filename_json= "data.json"
-#     jsonFile = open(filename_json, "w+")
-#     jsonFile.write(jsonstring)
-# jsonFile.close()
-  
-    
-
-
+def myconverter(k):
+    if isinstance(k, datetime.datetime):
+        return k.__repr__()
+jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
 
 fieldnames = ['hash','CommitLinesN', 'author','author-mail','author-time','author-tz','committer','committer-mail', 'commiter-time','commiter-tz','summary', 'previous', 'boundary', 'filename','commit_content']
 rows = arrayofDictionaries
 
-if len(sys.argv) > 2:
-    filename_csv = sys.argv[2]
+try:
+    filetype = sys.argv[2].split(".")
+except:
+    None
+
+if len(sys.argv) > 2 and filetype == "csv":
+    csv_output = filetype[1]
+
+    filename_csv = csv_output #sys.argv[2]
     with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: # woot woot, this looks good!
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
-else:
+else: 
     filename_csv = 'TestCSV.csv'
     with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: 
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
 
+try:
+    filetype1 = sys.argv[2].split(".") 
+except:
+    None
+  
+if len(sys.argv) > 2 and filetype1 == "json":
+    json_output = filetype1[1]
 
-
-
-#Task 2
-#Similar to how we allow the first argument to be a folder, could we do the same for the output file? :) 
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer filename_csv
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer filename_json
-
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Works, prints ALL data though)
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv (Works, prints ALL data though
-
-#Task 3
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer testfile.csv
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer testfile.json
-#Allow the user to basically choose which file to append to
+    filename_json= json_output #sys.argv[2]
+    jsonFile = open(filename_json, "w+")
+    jsonFile.write(jsonstring)
+    jsonFile.close()
+else:
+    filename_json= "data.json"
+    jsonFile = open(filename_json, "w+")
+    jsonFile.write(jsonstring)
+    jsonFile.close()
 
 #Task 4
 #Why isnt it writing the same way as README.md?? (csv)
@@ -171,7 +167,44 @@ else:
 
 #Commands to specify output
 #py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee data.json
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json (works)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json 
 #py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee TestCSV.csv
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv (works)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv 
 
+#Further Commands to Specify Output
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json 
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json (use me)
+
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv  (use me)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv
+
+
+
+
+
+#Previous Code:
+# if len(sys.argv) > 2:
+#     filename_json= json_output #sys.argv[2]
+#     jsonFile = open(filename_json, "w+")
+#     jsonFile.write(jsonstring)
+# else:
+#     filename_json= "data.json"
+#     jsonFile = open(filename_json, "w+")
+#     jsonFile.write(jsonstring)
+# jsonFile.close()
+  
+# fieldnames = ['hash','CommitLinesN', 'author','author-mail','author-time','author-tz','committer','committer-mail', 'commiter-time','commiter-tz','summary', 'previous', 'boundary', 'filename','commit_content']
+# rows = arrayofDictionaries
+
+# if len(sys.argv) > 2:
+#     filename_csv = csv_output #sys.argv[2]
+#     with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: # woot woot, this looks good!
+#         writer = csv.DictWriter(f, fieldnames=fieldnames)
+#         writer.writeheader()
+#         writer.writerows(rows)
+# else:
+#     filename_csv = 'TestCSV.csv'
+#     with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: 
+#         writer = csv.DictWriter(f, fieldnames=fieldnames)
+#         writer.writeheader()
+#         writer.writerows(rows)
