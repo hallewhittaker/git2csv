@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
+import json
 import os 
 import sys
+import csv
+import datetime
+import subprocess
 
 n = len(sys.argv)
  
@@ -17,15 +21,6 @@ else:
     mydir_new = os.chdir(mydir_tmp) 
     mydir = os.getcwd()
 
-
-#Fourth Task, fix bug (problem is with bytes)
-#UnicodeDecodeError: 'utf-8' codec can't decode byte 0x9c in position 9: invalid start byte with utf-8
-#UnicodeDecodeError: 'utf-32-le' codec can't decode bytes in position 0-3: code point not in range(0x110000)
-
-
-
-import datetime
-import subprocess
 
 z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
 stan_out = z.stdout
@@ -47,7 +42,7 @@ for i in range(len(finalArray)):
     count = 0
     tempdictionary = {}
     for individL in linearray:
-        individL = individL.decode("utf-8")
+        individL = individL.decode("ISO-8859-1")
         splitline = individL.split(" ") 
 
         temp_key_name = splitline[0]
@@ -105,14 +100,27 @@ for i in range(len(finalArray)):
             if key == "commit_content":
                 arrayofDictionaries.append(tempdictionary)
                 tempdictionary = {} 
-                count = 0 
+                count = 0
     print("Final Array:" + str(arrayofDictionaries))
 
+# aDict = str(arrayofDictionaries) # nope, we don't want to convert everything to a string yet! :P 
+jsonString = json.dumps(arrayofDictionaries)
+jsonFile = open("data.json", "w")
+jsonFile.write(jsonString)
+jsonFile.close()
 
+fieldnames = ['hash','CommitLinesN', 'author','author-mail','author-time','author-tz','committer','committer-mail', 'commiter-time','commiter-tz','summary', 'previous', 'boundary', 'filename','commit_content']
+rows = arrayofDictionaries
 
+# woot woot, this looks good!
+with open('TestCSV.csv', 'w+', encoding='ISO-8859-1', newline='') as f:
+    writer = csv.DictWriter(f, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(rows)
 
-# First task: get this working in a terminal. =P Hint: you already have python installed, but it likely isn't in your computer's "PATH".
-# python3 Git2CSV.py (current argument, empty string give default value)
+#TypeError: Object of type datetime is not JSON serializable
+#To ensure its correct hash/tempdictionary should be blue// not all one colour ie: not a big string
+
 
 # python_script = sys.argv[0]
 # python_argument = sys.argv[1]
@@ -124,3 +132,10 @@ for i in range(len(finalArray)):
 #Commands to specify folder
 # py Git2CSV.py C:\Users\Whitt\hallewhittaker 
 # py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer 
+
+#Commands to specify output
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee data.json
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee TestCSV.csv
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv
+
