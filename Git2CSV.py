@@ -17,7 +17,7 @@ if n > 1:
     mydir = os.getcwd() 
 else:
     mydir = os.getcwd() 
-    mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker" # TODO: Figure out why it's not working :p 
+    mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker" 
     mydir_new = os.chdir(mydir_tmp) 
     mydir = os.getcwd()
 
@@ -34,7 +34,7 @@ for i in filearray:
 finalArray.remove("")
 
 for i in range(len(finalArray)):
-    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[0]),stdout= subprocess.PIPE)
+    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),stdout= subprocess.PIPE)
     standard_out = r.stdout
     arrayofDictionaries = []
     linearray = standard_out.split(b'\n') 
@@ -113,9 +113,9 @@ except:
     None
 
 if n > 2 and filetype[1] == "csv": 
-    filename_csv = sys.argv[2]
-    with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: # woot woot, this looks good!
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+    filename_csv= sys.argv[2]
+    with open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_csv), "w+", encoding='ISO-8859-1', newline='') as sys.stdout:
+        writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
 else: 
@@ -129,17 +129,12 @@ def myconverter(k):
     if isinstance(k, datetime.datetime):
         return k.__repr__()
 jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
-json_object = json.dumps(dictionary, indent = 4)
-  
-# # Writing to sample.json
-# with open("sample.json", "w") as outfile:
-#     outfile.write(json_object)
 
 if n > 2 and filetype[1] == "json":
     filename_json= sys.argv[2]
-    jsonFile = open(filename_json, "w+")
-    jsonFile.write(jsonstring)
-    jsonFile.close()
+    sys.stdout = open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='')
+    sys.stdout.write(jsonstring)
+    sys.stdout.close()
 else:
     filename_json= "data.json"
     jsonFile = open(filename_json, "w+")
@@ -147,15 +142,15 @@ else:
     jsonFile.close()
 
 
+
 #Task 1
-#Why isnt it writing the same way as README.md?? (csv + json)
+#Where all output? only like 12 lines, why?
 
 #Task 2
 #Fix random text in actual output
 
 #Task 3
 #Fix commit lines to 1,1,1
-
 
 #Manual Directory Paths
 # mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker\\FormatFuzzer" #runs formatfuzzer
@@ -165,24 +160,23 @@ else:
 # py Git2CSV.py C:\Users\Whitt\hallewhittaker 
 # py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer 
 
-#Commands to specify output
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee data.json
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json 
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer  2>&1 | tee TestCSV.csv
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv 
-
 #Further Commands to Specify Output
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json 
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > data.json (use me)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json   (use me)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (use me)
 
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer > TestCSV.csv  (use me)
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv
+
 
 
 
 
 
 #Previous Code:
+#  filename_csv = sys.argv[2]
+#     with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: # woot woot, this looks good!
+#         writer = csv.DictWriter(f, fieldnames=fieldnames)
+#         writer.writeheader()
+#         writer.writerows(rows)
+
 # if len(sys.argv) > 2:
 #     filename_json= json_output #sys.argv[2]
 #     jsonFile = open(filename_json, "w+")
