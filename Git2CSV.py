@@ -9,8 +9,8 @@ import datetime
 import subprocess
 
 n = len(sys.argv)
- 
-if len(sys.argv) > 1:
+
+if n > 1:
     mydir = os.getcwd() 
     mydir_tmp = sys.argv[1]
     mydir_new = os.chdir(mydir_tmp) 
@@ -34,7 +34,7 @@ for i in filearray:
 finalArray.remove("")
 
 for i in range(len(finalArray)):
-    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),stdout= subprocess.PIPE)
+    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[0]),stdout= subprocess.PIPE)
     standard_out = r.stdout
     arrayofDictionaries = []
     linearray = standard_out.split(b'\n') 
@@ -104,23 +104,16 @@ for i in range(len(finalArray)):
         #break
     print("Final Array:" + str(arrayofDictionaries))
 
-def myconverter(k):
-    if isinstance(k, datetime.datetime):
-        return k.__repr__()
-jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
-
 fieldnames = ['hash','CommitLinesN', 'author','author-mail','author-time','author-tz','committer','committer-mail', 'commiter-time','commiter-tz','summary', 'previous', 'boundary', 'filename','commit_content']
 rows = arrayofDictionaries
 
 try:
-    filetype = sys.argv[2].split(".")
+    filetype = sys.argv[2].split(".") 
 except:
     None
 
-if len(sys.argv) > 2 and filetype == "csv":
-    csv_output = filetype[1]
-
-    filename_csv = csv_output #sys.argv[2]
+if n > 2 and filetype[1] == "csv": 
+    filename_csv = sys.argv[2]
     with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: # woot woot, this looks good!
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -132,15 +125,18 @@ else:
         writer.writeheader()
         writer.writerows(rows)
 
-try:
-    filetype1 = sys.argv[2].split(".") 
-except:
-    None
+def myconverter(k):
+    if isinstance(k, datetime.datetime):
+        return k.__repr__()
+jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
+json_object = json.dumps(dictionary, indent = 4)
   
-if len(sys.argv) > 2 and filetype1 == "json":
-    json_output = filetype1[1]
+# # Writing to sample.json
+# with open("sample.json", "w") as outfile:
+#     outfile.write(json_object)
 
-    filename_json= json_output #sys.argv[2]
+if n > 2 and filetype[1] == "json":
+    filename_json= sys.argv[2]
     jsonFile = open(filename_json, "w+")
     jsonFile.write(jsonstring)
     jsonFile.close()
@@ -150,11 +146,15 @@ else:
     jsonFile.write(jsonstring)
     jsonFile.close()
 
-#Task 4
-#Why isnt it writing the same way as README.md?? (csv)
 
-#Task 5
-#Why isnt it writing the same way as README.md?? (json)
+#Task 1
+#Why isnt it writing the same way as README.md?? (csv + json)
+
+#Task 2
+#Fix random text in actual output
+
+#Task 3
+#Fix commit lines to 1,1,1
 
 
 #Manual Directory Paths
