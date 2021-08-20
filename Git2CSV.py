@@ -21,7 +21,6 @@ else:
     mydir_new = os.chdir(mydir_tmp) 
     mydir = os.getcwd()
 
-
 z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
 stan_out = z.stdout
 
@@ -33,11 +32,14 @@ for i in filearray:
     finalArray.append(x)
 finalArray.remove("")
 
+arrayofDictionaries = []
 for i in range(len(finalArray)):
     r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),stdout= subprocess.PIPE)
     standard_out = r.stdout
-    arrayofDictionaries = []
     linearray = standard_out.split(b'\n') 
+
+    # print("Current length of dictionary: " + str(len(arrayofDictionaries)))
+    # print("We're currently analyzing the file: " + finalArray[i])
 
     count = 0
     tempdictionary = {}
@@ -98,17 +100,27 @@ for i in range(len(finalArray)):
         count += 1 
         for key,value in dict(tempdictionary).items():
             if key == "commit_content":
-                arrayofDictionaries.append(tempdictionary)
+                # print(tempdictionary)
+                arrayofDictionaries.append(tempdictionary.copy()) # TODO: check if copy is actually needed, it won't hurt, but it'll slow things down and take extra memory.
+                # print(len(arrayofDictionaries))
                 tempdictionary = {} 
                 count = 0
         #break
-    print("Final Array:" + str(arrayofDictionaries))
+    #print("Final Array:" + str(arrayofDictionaries))
+
+print("Final length of dictionary: " + str(len(arrayofDictionaries)))
+
+def myconverter(k):
+    if isinstance(k, datetime.datetime):
+        return k.__repr__()
+jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
 
 fieldnames = ['hash','CommitLinesN', 'author','author-mail','author-time','author-tz','committer','committer-mail', 'commiter-time','commiter-tz','summary', 'previous', 'boundary', 'filename','commit_content']
 rows = arrayofDictionaries
 
+
 try:
-    filetype = sys.argv[2].split(".") 
+    filetype = sys.argv[2].split(".") # What if I have the filename of "this.is.a.file.json"? =P 
 except:
     None
 
@@ -125,22 +137,16 @@ else:
         writer.writeheader()
         writer.writerows(rows)
 
-def myconverter(k):
-    if isinstance(k, datetime.datetime):
-        return k.__repr__()
-jsonstring= json.dumps(arrayofDictionaries, default = myconverter)
-
 if n > 2 and filetype[1] == "json":
     filename_json= sys.argv[2]
-    sys.stdout = open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='')
-    sys.stdout.write(jsonstring)
-    sys.stdout.close()
+    sys.stdout = open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='') 
+    sys.stdout.write(jsonstring) # it is only priniting final array, it is overwriting the rest. I have tried using a,w, w+ and opening the file outside of the array, and attempted to use a for loop for writing to file. No luck 
+    sys.stdout.close() # the problem could also be realted to jsonstring, as when i print this i get the finalarray in array of dict as well
 else:
     filename_json= "data.json"
     jsonFile = open(filename_json, "w+")
     jsonFile.write(jsonstring)
     jsonFile.close()
-
 
 
 #Task 1
@@ -151,6 +157,7 @@ else:
 
 #Task 3
 #Fix commit lines to 1,1,1
+
 
 #Manual Directory Paths
 # mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker\\FormatFuzzer" #runs formatfuzzer
