@@ -11,7 +11,8 @@ import argparse
 import copy
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--format', type=str, help = "format used for file", action= "store") #just this -- for formatfuzzer # Aside from filepath and output_file, all other arguments should have -- in front of them
+parser.add_argument('--format', type=str, help = "format used for file", action= "store") #just this -- for formatfuzzer. Aside from filepath and output_file, all other arguments should have -- in front of them
+parser.add_argument('--filelist', type=str, help= "files to run (exclude binary files)", action="store")
 parser.add_argument('filepath', type=str, help = "filepath of program", action= "store") #need all -- for my repo 
 parser.add_argument('output_file', type=str, action= "store", help = "output filename") 
 args = parser.parse_args()
@@ -19,6 +20,11 @@ args = parser.parse_args()
 filepath = args.filepath 
 output_file = args.output_file
 specified_format = args.format
+list_of_files = args.filelist
+
+# TODO (#4): Add a flag to allow overrwriting.
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --overwrite-existing --format json TestCSV.json #if the file exists dont overwrite it, unless they add this flag
+# py GitXCSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format json Git2CSV.py # this should not work, our program should say we need to add --overwrite-existing to allow overwriting
 
 mydir = os.getcwd()
 mydir_static_copy = copy.copy(mydir)
@@ -31,32 +37,23 @@ else:
     mydir_new = os.chdir(mydir_tmp) 
     mydir = os.getcwd()
 
-
-# # TODO (#3): If the user specifies "-" as the output_file AND the format, then write the output to stdout and NOT a file
-# # py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer -
-# # py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer -
-
-# # Examples of equivalent commands (if you have questions or are confused at all, please ask!):
-# # py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer - > TestCSV.csv # everything from the ">" and beyond is handled already by the operating system
-# # py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv
-
-# # Made-up example of where it would be useful (this won't actually work, don't worry about it much yet):
-# # py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer - | tensorflow_script.py # pipe our output right to a tensorflow script, and avoid writing to disk
-
-# # The convention is usually:
-# # program_name.py --arguments_like_type example_type --stuff_like_formats jpg usually_input_file_or_folder usually_output_file_or_folder
-
-
-z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
-stan_out = z.stdout
-
-finalArray = []
-filearray = stan_out.split(b'\n')
-
-for i in filearray:
-    x= i.decode("utf-8")
-    finalArray.append(x)
-finalArray.remove("")
+if list_of_files != None:
+    finalArray = []
+    filename_txt = list_of_files
+    with open(mydir_static_copy + '\\{}'.format(filename_txt), "r", encoding='ISO-8859-1', newline='') as f:
+        content_lines = f.readlines()
+        for i in content_lines:
+            splitvalues= i.split('\r\n')
+            finalArray.append(splitvalues[0])    
+else:
+    z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
+    stan_out = z.stdout
+    finalArray = []
+    filearray = stan_out.split(b'\n')
+    for i in filearray:
+        x= i.decode("utf-8")
+        finalArray.append(x)
+    finalArray.remove("")
 
 arrayofDictionaries = []
 for i in range(len(finalArray)):
@@ -145,7 +142,11 @@ try:
 except:
     None
 
-if filepath != None and specified_format == "csv":
+if filepath != None and specified_format == "csv" and output_file == '-':
+    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(rows)
+elif filepath != None and specified_format == "csv":
     filename_csv = "TestCSV.csv"
     with open(mydir_static_copy + '\\{}'.format(filename_csv), "w+", encoding='ISO-8859-1', newline='') as sys.stdout:
         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
@@ -166,8 +167,10 @@ if filepath == None:
         writer.writeheader()
         writer.writerows(rows)
 
-
-if filepath != None and  specified_format == "json":
+if filepath != None and specified_format == "json" and output_file == '-':
+    sys.stdout.write(jsonstring)
+    sys.stdout.close()
+elif filepath != None and  specified_format == "json":
     filename_json= "data.json"
     with open(mydir_static_copy + '\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='')  as sys.stdout:
         sys.stdout.write(jsonstring) 
@@ -181,6 +184,7 @@ if filepath == None:
     filename_json= "data.json"
     with open(mydir_static_copy + '\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='')  as jsonFile:   
         jsonFile.write(jsonstring)
+
 
 
 
@@ -209,4 +213,7 @@ if filepath == None:
 #py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (working) PRINT CSV
 #py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (working) PRINT JSON
 #py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (working) PRINT CSV
-
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer - (working)
+#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer - (working)
+#py Git2CSV.py --format csv --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > TestCSV.csv (working)
+#py Git2CSV.py --format json --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > data.json (working)
