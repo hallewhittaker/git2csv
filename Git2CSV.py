@@ -8,38 +8,43 @@ import csv
 import datetime
 import subprocess
 import argparse
+import copy
 
 parser = argparse.ArgumentParser()
-parser.add_argument('filepath', type=str, help = "filepath of program", action= "store")
-parser.add_argument('--format', type=str, help = "format used for file", action= "store")
-parser.add_argument('output_file', type=str, action= "store", help = "output filename")
+parser.add_argument('--format', type=str, help = "format used for file", action= "store") #just this -- for formatfuzzer # Aside from filepath and output_file, all other arguments should have -- in front of them
+parser.add_argument('filepath', type=str, help = "filepath of program", action= "store") #need all -- for my repo 
+parser.add_argument('output_file', type=str, action= "store", help = "output filename") 
 args = parser.parse_args()
 
 filepath = args.filepath 
 output_file = args.output_file
 specified_format = args.format
 
+mydir = os.getcwd()
+mydir_static_copy = copy.copy(mydir)
 if filepath != None:
-    mydir = os.getcwd() 
-    mydir_tmp = filepath
+    mydir_tmp = filepath #C:\Users\Whitt\hallewhittaker\FormatFuzzer
     mydir_new = os.chdir(mydir_tmp) 
     mydir = os.getcwd() 
 else:
-    mydir = os.getcwd() 
-    mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker" 
+    mydir_tmp = mydir_static_copy #"C:\\Users\\Whitt\\hallewhittaker" 
     mydir_new = os.chdir(mydir_tmp) 
     mydir = os.getcwd()
 
-# TODO (#3): If the user specifies --stdout AND the format, then write the output to stdout and NOT a file
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format json --stdout
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format csv --stdout
 
-# Examples of equivalent commands (if you have questions or are confused at all, please ask!):
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format csv --stdout > TestCSV.csv # everything from the ">" and beyond is handled already by the operating system
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format csv TestCSV.csv
+# # TODO (#3): If the user specifies "-" as the output_file AND the format, then write the output to stdout and NOT a file
+# # py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer -
+# # py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer -
 
-# Made-up example of where it would be useful (this won't actually work, don't worry about it much yet):
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format json --stdout | tensorflow_script.py # pipe our output right to a tensorflow script, and avoid writing to disk
+# # Examples of equivalent commands (if you have questions or are confused at all, please ask!):
+# # py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer - > TestCSV.csv # everything from the ">" and beyond is handled already by the operating system
+# # py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv
+
+# # Made-up example of where it would be useful (this won't actually work, don't worry about it much yet):
+# # py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer - | tensorflow_script.py # pipe our output right to a tensorflow script, and avoid writing to disk
+
+# # The convention is usually:
+# # program_name.py --arguments_like_type example_type --stuff_like_formats jpg usually_input_file_or_folder usually_output_file_or_folder
 
 
 z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
@@ -126,7 +131,6 @@ for i in range(len(finalArray)):
                 tempdictionary = {} 
                 count = 0
     #print("Final Array:" + str(arrayofDictionaries))
-
 def myconverter(k):
     if isinstance(k, datetime.datetime):
         return k.__repr__()
@@ -141,48 +145,42 @@ try:
 except:
     None
 
-if specified_format == "csv":
+if filepath != None and specified_format == "csv":
     filename_csv = "TestCSV.csv"
-    with open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_csv), "w+", encoding='ISO-8859-1', newline='') as sys.stdout:
+    with open(mydir_static_copy + '\\{}'.format(filename_csv), "w+", encoding='ISO-8859-1', newline='') as sys.stdout:
         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
 elif specified_format == "json":
     None
-elif filetype == "csv":
+elif filepath != None and filetype == "csv":
     filename_csv = output_file
-    with open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_csv), "w+", encoding='ISO-8859-1', newline='') as sys.stdout:
+    with open(mydir_static_copy + '\\{}'.format(filename_csv), "w+", encoding='ISO-8859-1', newline='') as sys.stdout:
         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
-else: 
+if filepath == None:
     filename_csv = 'TestCSV.csv'
-    with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: 
+    with open(mydir_static_copy + '\\{}'.format(filename_csv), 'w+', encoding='ISO-8859-1', newline='') as f: 
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
 
-if specified_format == "json":
+
+if filepath != None and  specified_format == "json":
     filename_json= "data.json"
-    sys.stdout = open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='') 
-    sys.stdout.write(jsonstring) 
+    with open(mydir_static_copy + '\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='')  as sys.stdout:
+        sys.stdout.write(jsonstring) 
 elif specified_format == "csv":
     None
-elif filetype =="json":
+elif filepath != None and  filetype =="json":
     filename_json= output_file
-    sys.stdout = open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='') 
-    sys.stdout.write(jsonstring) 
-    sys.stdout.close() 
-else:
+    with open(mydir_static_copy + '\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='')  as sys.stdout:
+        sys.stdout.write(jsonstring) 
+if filepath == None: 
     filename_json= "data.json"
-    jsonFile = open(filename_json, "w+")
-    jsonFile.write(jsonstring)
-    jsonFile.close()
-
-
-
-
-
+    with open(mydir_static_copy + '\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='')  as jsonFile:   
+        jsonFile.write(jsonstring)
 
 
 
@@ -205,32 +203,10 @@ else:
 # py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer 
 
 #Further Commands to Specify Output
-#py Git2CSV.py --filepath C:\Users\Whitt\hallewhittaker\FormatFuzzer --output_file data.json (use me)
-#py Git2CSV.py --filepath C:\Users\Whitt\hallewhittaker\FormatFuzzer --output_file TestCSV.csv (use me)
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json   (works)
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (works)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv  (working)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (working)
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (working) PRINT JSON
+#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (working) PRINT CSV
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (working) PRINT JSON
+#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (working) PRINT CSV
 
-#Previous Code:
-# if output_file != None and (specified_format == "csv" or filetype =="csv"):
-#     filename_csv= output_file
-#     with open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_csv), "w+", encoding='ISO-8859-1', newline='') as sys.stdout:
-#         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
-#         writer.writeheader()
-#         writer.writerows(rows)  
-# else: 
-#     filename_csv = 'TestCSV.csv'
-#     with open(filename_csv, 'w+', encoding='ISO-8859-1', newline='') as f: 
-#         writer = csv.DictWriter(f, fieldnames=fieldnames)
-#         writer.writeheader()
-#         writer.writerows(rows)
-
-# if output_file != None (specified_format == "json" or filetype =="json"):
-#     filename_json= output_file
-#     sys.stdout = open('C:\\Users\\Whitt\\hallewhittaker\\{}'.format(filename_json), "w+", encoding='ISO-8859-1', newline='') 
-#     sys.stdout.write(jsonstring) 
-#     sys.stdout.close() 
-# else:
-#     filename_json= "data.json"
-#     jsonFile = open(filename_json, "w+")
-#     jsonFile.write(jsonstring)
-#     jsonFile.close()
