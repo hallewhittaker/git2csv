@@ -11,7 +11,7 @@ import argparse
 import copy
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--format', type=str, help = "format used for file", action= "store") #just this -- for formatfuzzer. Aside from filepath and output_file, all other arguments should have -- in front of them
+parser.add_argument('--format', type=str, help = "format used for file", action= "store") #just this -- for formatfuzzer
 parser.add_argument('--filelist', type=str, help= "files to run (exclude binary files)", action="store")
 parser.add_argument('--overwrite_existing', help= "overwrite the existing file",  action='store_true', default=False) 
 parser.add_argument('filepath', type=str, help = "filepath of program", action= "store") #need all -- for my repo 
@@ -24,16 +24,24 @@ specified_format = args.format
 list_of_files = args.filelist
 overwrite_boolean = args.overwrite_existing
 
-# TODO (#4): Add a flag to allow overrwriting.
-# py Git2CSV.py --format csv --overwrite-existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv #if the file exists dont overwrite it, unless they add this flag
-# py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv # this should not work, our program should say we need to add --overwrite-existing to allow overwriting
-# py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv
-
-# py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (overwrites)
-# py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (does not overwrite)
+# TODO Remove Print Statement/ Adjust Logic
+# TODO (#5): Instead of using print, let's use the logging module in python.
+# https://docs.python.org/3/howto/logging.html
+# Also add a new flag that allows use to set the debugging level
+# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format csv --debugging-level DEBUG TestCSV.csv
 
 mydir = os.getcwd()
 mydir_static_copy = copy.copy(mydir)
+
+if overwrite_boolean == False:
+    filename_ = output_file
+    isExist= os.path.exists(mydir_static_copy + '\\{}'.format(filename_))
+    if isExist == True:
+        print("File Already Exists")
+        raise Exception ("To Do")
+    else:
+        None
+
 if filepath != None:
     mydir_tmp = filepath #"C:\Users\Whitt\hallewhittaker\FormatFuzzer"
     mydir_new = os.chdir(mydir_tmp) 
@@ -224,7 +232,6 @@ if filepath != None and specified_format == "json" and output_file == '-': #stdo
 filename_jsonE = output_file
 isExist2 = os.path.exists(mydir_static_copy + '\\{}'.format(filename_jsonE))
 if filepath != None and specified_format == "json" and isExist2 == False: # format json and filename doesnt exist
-    print("This file does not currently exist, we have created the file:" + str(filename_jsonE))
     with open(mydir_static_copy + '\\{}'.format(filename_jsonE), "w", encoding='ISO-8859-1', newline='')  as sys.stdout:
             sys.stdout.write(jsonstring)
 
@@ -262,19 +269,8 @@ if filepath == None: # no arguments entered
 
 
 
-#arrayofDictionaries.append(tempdictionary.copy()) #Temp dictionary copy was not needed, i ran it regularly versus using copy. Regularly worked perfectly (compared output to be sure)
-
 #TensureFlow Fix (let's not do this yet)
 #Fix commit lines to 1,1,1
-
-#Manual Directory Paths
-# mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker\\FormatFuzzer" #runs formatfuzzer
-# mydir_tmp = "C:\\Users\\Whitt\\hallewhittaker" #runs Git2CSV
-
-#Commands to specify folder
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker 
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer 
-
 
 #JSON
 #py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (working) PRINT JSON
@@ -297,26 +293,12 @@ if filepath == None: # no arguments entered
 #py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (works) 
 #py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (works)
 #py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (works) 
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Works as expected, json in next output file)
 
 #CSV Overwriting 
 #py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (works)
 #py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (works) 
 #py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (works)
 #py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (works) 
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.txt (Works as expected, csv in new output file )
 
-
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.txt (Works as expected)
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Works as expected)
-
-#if the file has been manually specified place it there versus format, doesnt matter about overwriting DONE
-#overwrtiting should be palced first before all of the processing is done
-#if there is no format, or filetype containing csv or json. CSV is the default DONE
-
-
-
-#Previous Code:
-# filename_csv = "TestCSV.csv"
-    # with open(mydir_static_copy + '\\{}'.format(filename_csv), "w", encoding='ISO-8859-1', newline='') as sys.stdout:
-    #     writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
-    #     writer.writeheader()
-    #     writer.writerows(rows)
