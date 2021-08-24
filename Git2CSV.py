@@ -9,12 +9,14 @@ import datetime
 import subprocess
 import argparse
 import copy
+import logging
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--format', type=str, help = "format used for file", action= "store") #just this -- for formatfuzzer
+parser.add_argument('--format', type=str, help = "format used for file", action= "store") 
 parser.add_argument('--filelist', type=str, help= "files to run (exclude binary files)", action="store")
-parser.add_argument('--overwrite_existing', help= "overwrite the existing file",  action='store_true', default=False) 
-parser.add_argument('filepath', type=str, help = "filepath of program", action= "store") #need all -- for my repo 
+parser.add_argument('--overwrite_existing', help= "overwrites the existing file",  action='store_true', default=False) 
+parser.add_argument('--debugging_level', type=str, help= "debugs program at logging statements", action="store")
+parser.add_argument('filepath', type=str, help = "filepath of program", action= "store") 
 parser.add_argument('output_file', type=str, action= "store", help = "output filename") 
 args = parser.parse_args()
 
@@ -23,12 +25,9 @@ output_file = args.output_file
 specified_format = args.format
 list_of_files = args.filelist
 overwrite_boolean = args.overwrite_existing
+debugging_level = args.debugging_level
 
-# TODO Remove Print Statement/ Adjust Logic
-# TODO (#5): Instead of using print, let's use the logging module in python.
-# https://docs.python.org/3/howto/logging.html
-# Also add a new flag that allows use to set the debugging level
-# py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer --format csv --debugging-level DEBUG TestCSV.csv
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 mydir = os.getcwd()
 mydir_static_copy = copy.copy(mydir)
@@ -37,8 +36,8 @@ if overwrite_boolean == False:
     filename_ = output_file
     isExist= os.path.exists(mydir_static_copy + '\\{}'.format(filename_))
     if isExist == True:
-        print("File Already Exists")
-        raise Exception ("To Do")
+        logging.error("File Already Exists")
+        raise Exception ("Use --overwrite_existing to rewrite this file or use a file that doesn't exist")
     else:
         None
 
@@ -75,9 +74,9 @@ for i in range(len(finalArray)):
     standard_out = r.stdout
     linearray = standard_out.split(b'\n') 
 
-    # Change this to be like logging.debugging instead of print
-    # print("Current length of dictionary: " + str(len(arrayofDictionaries)))
-    # print("We're currently analyzing the file: " + finalArray[i])
+    if debugging_level != None:
+        logging.debug("Current length of dictionary: " + str(len(arrayofDictionaries)))
+        logging.debug("We're currently analyzing the file: " + finalArray[i])
 
     count = 0
     tempdictionary = {}
@@ -141,7 +140,10 @@ for i in range(len(finalArray)):
                 arrayofDictionaries.append(tempdictionary)
                 tempdictionary = {} 
                 count = 0
-    #print("Final Array:" + str(arrayofDictionaries))
+
+# if debugging_level != None:
+#     logging.debug("Final Array:" + str(arrayofDictionaries))
+
 def myconverter(k):
     if isinstance(k, datetime.datetime):
         return k.__repr__()
@@ -156,7 +158,10 @@ try:
 except:
     None
 
-if filepath != None and overwrite_boolean ==True and specified_format =="csv": #dealing with overwrites
+#CSV
+filename_csvE = output_file
+isExist1 = os.path.exists(mydir_static_copy + '\\{}'.format(filename_csvE))
+if filepath != None and overwrite_boolean ==True and specified_format =="csv" and isExist1 ==True: #dealing with overwrites   
     filename_csv = "TestCSV.csv"
     isExist = os.path.exists(mydir_static_copy + '\\{}'.format(filename_csv))
     if isExist == True:
@@ -173,25 +178,19 @@ if filepath != None and specified_format == None and filetype != "csv" and filet
             writer.writerows(rows)
 
 if filepath != None and specified_format == "csv" and output_file == '-': #stdout
-    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames, lineterminator='\n')
     writer.writeheader()
     writer.writerows(rows)
 
-filename_csvE = output_file
-isExist1 = os.path.exists(mydir_static_copy + '\\{}'.format(filename_csvE))
-if filepath != None and specified_format == "csv" and isExist1 == False: # format is csv and output file doesnt exist
+if filepath != None and specified_format == "csv" and isExist1 == False and output_file != '-': # format is csv and output file doesnt exist 
     with open(mydir_static_copy + '\\{}'.format(filename_csvE), "w", encoding='ISO-8859-1', newline='') as sys.stdout:
             writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(rows)
 
-elif filepath != None and specified_format == "csv": #format first priority
+elif filepath != None and specified_format == "csv" and list_of_files == None: #format first priority
     filename_csv= "TestCSV.csv"
-    isExist = os.path.exists(mydir_static_copy + '\\{}'.format(filename_csv))
-    if isExist == True and overwrite_boolean ==False:
-        print("You are attempting to overwrite a file that already exists, use --overwrite_existing to perform this action (csv elif 1)")
-    else:
-        with open(mydir_static_copy + '\\{}'.format(filename_csv), "w", encoding='ISO-8859-1', newline='') as sys.stdout:
+    with open(mydir_static_copy + '\\{}'.format(filename_csv), "w", encoding='ISO-8859-1', newline='') as sys.stdout:
             writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(rows)
@@ -201,11 +200,7 @@ elif specified_format == "json": #if format json, nothing
 
 elif filepath != None and filetype == "csv": #filetype second priority 
     filename_csv = output_file
-    isExist = os.path.exists(mydir_static_copy + '\\{}'.format(filename_csv))
-    if isExist == True and overwrite_boolean ==False:
-        print("You are attempting to overwrite a file that already exists, use --overwrite_existing to perform this action (csv elif 2)")
-    else:
-        with open(mydir_static_copy + '\\{}'.format(filename_csv), "w", encoding='ISO-8859-1', newline='') as sys.stdout:
+    with open(mydir_static_copy + '\\{}'.format(filename_csv), "w", encoding='ISO-8859-1', newline='') as sys.stdout:
             writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(rows)
@@ -218,7 +213,9 @@ if filepath == None: #no arguments
         writer.writerows(rows)
 
 #JSON
-if filepath != None and overwrite_boolean ==True and specified_format== "json": #dealing with overwriting
+filename_jsonE = output_file
+isExist2 = os.path.exists(mydir_static_copy + '\\{}'.format(filename_jsonE))
+if filepath != None and overwrite_boolean ==True and specified_format =="json" and  isExist2==True: #dealing with overwriting
     filename_json = "data.json"
     isExist = os.path.exists(mydir_static_copy + '\\{}'.format(filename_json))
     if isExist == True:
@@ -229,19 +226,13 @@ if filepath != None and specified_format == "json" and output_file == '-': #stdo
     sys.stdout.write(jsonstring)
     sys.stdout.close()
 
-filename_jsonE = output_file
-isExist2 = os.path.exists(mydir_static_copy + '\\{}'.format(filename_jsonE))
-if filepath != None and specified_format == "json" and isExist2 == False: # format json and filename doesnt exist
+if filepath != None and specified_format == "json" and isExist2 == False and output_file != '-': # format json and file doesnt exist, json output to new file
     with open(mydir_static_copy + '\\{}'.format(filename_jsonE), "w", encoding='ISO-8859-1', newline='')  as sys.stdout:
             sys.stdout.write(jsonstring)
 
-elif filepath != None and  specified_format == "json": #specifying format first
+elif filepath != None and specified_format == "json" and list_of_files == None: #specifying format first
     filename_json= "data.json"
-    isExist = os.path.exists(mydir_static_copy + '\\{}'.format(filename_json))
-    if isExist == True and overwrite_boolean ==False:
-        print("You are attempting to overwrite a file that already exists, use --overwrite_existing to perform this action (elif 1)")
-    else:
-        with open(mydir_static_copy + '\\{}'.format(filename_json), "w", encoding='ISO-8859-1', newline='')  as sys.stdout:
+    with open(mydir_static_copy + '\\{}'.format(filename_json), "w", encoding='ISO-8859-1', newline='')  as sys.stdout:
             sys.stdout.write(jsonstring) 
 
 elif specified_format == "csv": #if csv do nothing.
@@ -249,11 +240,7 @@ elif specified_format == "csv": #if csv do nothing.
 
 elif filepath != None and  filetype =="json": #specifying filetype second priority
     filename_json= output_file
-    isExist = os.path.exists(mydir_static_copy + '\\{}'.format(filename_json))
-    if isExist == True and overwrite_boolean ==False:
-        print("You are attempting to overwrite a file that already exists, use --overwrite_existing to perform this action (elif 2)")
-    else:
-        with open(mydir_static_copy + '\\{}'.format(filename_json), "w", encoding='ISO-8859-1', newline='')  as sys.stdout:
+    with open(mydir_static_copy + '\\{}'.format(filename_json), "w", encoding='ISO-8859-1', newline='')  as sys.stdout:
             sys.stdout.write(jsonstring) 
 
 if filepath == None: # no arguments entered
@@ -266,39 +253,46 @@ if filepath == None: # no arguments entered
 
 
 
-
-
-
-#TensureFlow Fix (let's not do this yet)
-#Fix commit lines to 1,1,1
-
 #JSON
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (working) PRINT JSON
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (working)
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (working) PRINT JSON
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: Expected JSON output to new file called TestCSV.txt)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Expected Exception Raised)
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Expected Exception Raised)
 
 #CSV 
-#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (working) PRINT CSV
-#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (working) PRINT CSV in TXT file doesnt care for overwright
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv  (working)
+#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Expected Exception Raised)
+#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: Expected CSV output to new file called TestCSV.txt)
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Expected Exception Raised)
 
 #Stdout
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer - (working)
-#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer - (working)
-#py Git2CSV.py --format csv --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > TestCSV.csv (working)
-#py Git2CSV.py --format json --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > data.json (working)
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer - (Working: STDOUT in JSON output)
+#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer - (Working: STDOUT in CSV output)
+#py Git2CSV.py --format csv --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > TestCSV.csv (Working: Reads from listoffiles.txt then prints data to csv file)
+#py Git2CSV.py --format json --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > data.json (Working: Reads from listoffiles.txt then prints data to json file)
 
 #JSON Overwriting
-#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (works)
-#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (works) 
-#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (works)
-#py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (works) 
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Works as expected, json in next output file)
+#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json  (Working: Json output to data.json)
+#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Json output to format json)
+#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: Json output to new file TestCSV.txt)
+#py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Json output to data.json) 
+#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working:Json output in TestCSV.txt file)
 
 #CSV Overwriting 
-#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (works)
-#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (works) 
-#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (works)
-#py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (works) 
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.txt (Works as expected, csv in new output file )
+#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: CSV output to testcsv.csv)
+#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: CSV output to testcsv.csv)
+#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: CSV output to new file)
+#py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: CSV output to testcsv.csv) 
+#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.txt (Working: No format specified, csv output in new output file )
+
+#JSON Debugging
+#py Git2CSV.py --format json --overwrite_existing --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Debugs as expected and enters data to data.json)
+#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Json output to data.json)
+#py Git2CSV.py --format json --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Raised Exception)
+#py Git2CSV.py --format json --debugging_level ERROR C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Raised Exception)
+
+#CSV Debugging
+#py Git2CSV.py --format csv --overwrite_existing --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Debugs as expected and enters output to TestCSV.csv)
+#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: CSV output to TestCSV,csv)
+#py Git2CSV.py --format csv --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Raised Exception)
+#py Git2CSV.py --format csv --debugging_level ERROR C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Raised Exception)
+
 
