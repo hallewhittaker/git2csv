@@ -170,6 +170,8 @@ change_output = False
 if change_output == True:
     output_type = f
 
+#how to rename repositirty on github changing it to git2csv
+
 #CSV
 def open_csv(filename_csv):
     with open(mydir_static_copy + '\\{}'.format(filename_csv), write_mode, encoding='ISO-8859-1', newline='') as output_type:
@@ -228,18 +230,18 @@ if filepath != None and specified_format == "json" and output_file == '-': #stdo
     sys.stdout.write(jsonstring)
     sys.stdout.close()
 
-if filepath != None and specified_format == "json" and isExist2 == False and output_file != '-': # format json and file doesnt exist, json output to new fil
+if filepath != None and specified_format == "json" and isExist2 == False and output_file != '-': # format json and file doesnt exist, json output to new file. output_file ensures a new file called "-" isnt created
     filename_json = output_file
     open_json(filename_json)
 
-elif filepath != None and specified_format == "json" and list_of_files == None: #format priority 1
+elif filepath != None and specified_format == "json" and list_of_files == None: #format priority 1, list_of_files usage ensures it outputs to filetype (skips this one) 
     filename_json= "data.json"
     open_json(filename_json) 
 
 elif specified_format == "csv": #do nothing if csv
     None
 
-elif filepath != None and  filetype =="json":  #filetype priority 2
+elif filepath != None and filetype =="json":  #filetype priority 2
     filename_json= output_file
     open_json(filename_json) 
 
