@@ -35,7 +35,8 @@ mydir_static_copy = copy.copy(mydir)
 
 if overwrite_boolean == False:
     filename_ = output_file
-    isExist= os.path.exists(mydir_static_copy + '\\{}'.format(filename_))
+    open1 = os.path.join(mydir_static_copy , filename_)
+    isExist= os.path.exists(open1)
     if isExist == True:
         logging.error("File Already Exists")
         raise Exception ("Use --overwrite_existing to rewrite this file or use a file that doesn't exist")
@@ -54,7 +55,8 @@ else:
 if list_of_files != None:
     finalArray = []
     filename_txt = list_of_files
-    with open(mydir_static_copy + '\\{}'.format(filename_txt), "r", encoding='ISO-8859-1', newline='') as f:
+    fileopen= os.path.join(mydir_static_copy , filename_txt)
+    with open(fileopen, "r", encoding='ISO-8859-1', newline='') as f:
         content_lines = f.readlines()
         for i in content_lines:
             splitvalues= i.split('\r\n')
