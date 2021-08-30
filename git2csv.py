@@ -59,7 +59,7 @@ if list_of_files != None:
             splitvalues= i.split('\r\n')
             finalArray.append(splitvalues[0])    
 else:
-    z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
+    z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD',shell=True, stdout= subprocess.PIPE)
     stan_out = z.stdout
     finalArray = []
     filearray = stan_out.split(b'\n')
@@ -70,7 +70,7 @@ else:
 
 arrayofDictionaries = []
 for i in range(len(finalArray)):
-    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),stdout= subprocess.PIPE)
+    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),shell=True, stdout= subprocess.PIPE)
     standard_out = r.stdout
     linearray = standard_out.split(b'\n') 
 
@@ -170,14 +170,18 @@ change_output = False
 if change_output == True:
     output_type = f
 
+#py git2csv.py . test.csv --overwrite_existing
+
 #CSV
 def open_csv(filename_csv):
-    with open(mydir_static_copy + '\\{}'.format(filename_csv), write_mode, encoding='ISO-8859-1', newline='') as output_type:
+    file0open = os.path.join(mydir_static_copy , filename_csv)
+    with open(file0open, write_mode, encoding='ISO-8859-1', newline='') as output_type:
         writer = csv.DictWriter(output_type, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
 
-isExist1 = os.path.exists(mydir_static_copy + '\\{}'.format(output_file)) 
+file1open= os.path.join(mydir_static_copy , output_file)
+isExist1= os.path.exists(file1open)
 if filepath != None and overwrite_boolean ==True and specified_format =="csv" and isExist1 ==True: #if format exists, and file doesnt exist, overwrite it
     filename_csv = "TestCSV.csv"
     force_overwrite == True
@@ -215,10 +219,12 @@ if filepath == None: #no arguments entered
 
 #JSON
 def open_json(filename_json):
-    with open(mydir_static_copy + '\\{}'.format(filename_json), write_mode, encoding='ISO-8859-1', newline='')  as output_type:
+    file2open = os.path.join(mydir_static_copy , filename_json)
+    with open (file2open, write_mode, encoding='ISO-8859-1', newline='')  as output_type:
         output_type.write(jsonstring) 
 
-isExist2 = os.path.exists(mydir_static_copy + '\\{}'.format(output_file))
+file3open= os.path.join(mydir_static_copy , output_file)
+isExist2= os.path.exists(file3open)
 if filepath != None and overwrite_boolean ==True and specified_format =="json" and  isExist2==True: #if format exists, and file doesnt exist, overwrite it
     filename_json = "data.json"
     force_overwrite == True
