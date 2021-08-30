@@ -59,7 +59,8 @@ if list_of_files != None:
             splitvalues= i.split('\r\n')
             finalArray.append(splitvalues[0])    
 else:
-    z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD', stdout= subprocess.PIPE)
+    #./git2csv.py . test.json
+    z= subprocess.run('git ls-tree --full-tree --name-only -r HEAD',shell=True, stdout= subprocess.PIPE)
     stan_out = z.stdout
     finalArray = []
     filearray = stan_out.split(b'\n')
@@ -70,7 +71,7 @@ else:
 
 arrayofDictionaries = []
 for i in range(len(finalArray)):
-    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),stdout= subprocess.PIPE)
+    r= subprocess.run('git --no-pager blame --line-porcelain {}'.format(finalArray[i]),shell=True, stdout= subprocess.PIPE)
     standard_out = r.stdout
     linearray = standard_out.split(b'\n') 
 
