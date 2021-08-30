@@ -170,8 +170,6 @@ change_output = False
 if change_output == True:
     output_type = f
 
-#how to rename repositirty on github changing it to git2csv
-
 #CSV
 def open_csv(filename_csv):
     with open(mydir_static_copy + '\\{}'.format(filename_csv), write_mode, encoding='ISO-8859-1', newline='') as output_type:
@@ -249,47 +247,3 @@ if filepath == None: #no arguments entered
     filename_json= "data.json"
     change_output == True
     open_json(filename_json)
-
-
-
-#JSON
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: Expected JSON output to new file called TestCSV.txt)
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Expected Exception Raised)
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Expected Exception Raised)
-
-#CSV 
-#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Expected Exception Raised)
-#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: Expected CSV output to new file called TestCSV.txt)
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Expected Exception Raised)
-
-#Stdout
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer - (Working: STDOUT in JSON output)
-#py Git2CSV.py --format csv C:\Users\Whitt\hallewhittaker\FormatFuzzer - (Working: STDOUT in CSV output)
-#py Git2CSV.py --format csv --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > TestCSV.csv (Working: Reads from listoffiles.txt then prints data to csv file)
-#py Git2CSV.py --format json --filelist ListofFiles.txt C:\Users\Whitt\hallewhittaker\FormatFuzzer - > data.json (Working: Reads from listoffiles.txt then prints data to json file)
-
-#JSON Overwriting
-#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json  (Working: Json output to data.json)
-#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Json output to format json)
-#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: Json output to new file TestCSV.txt)
-#py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Json output to data.json) 
-#py Git2CSV.py --format json C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working:Json output in TestCSV.txt file)
-
-#CSV Overwriting 
-#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: CSV output to testcsv.csv)
-#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: CSV output to testcsv.csv)
-#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.txt (Working: CSV output to new file)
-#py Git2CSV.py --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: CSV output to testcsv.csv) 
-#py Git2CSV.py C:\Users\Whitt\hallewhittaker\FormatFuzzer data.txt (Working: No format specified, csv output in new output file )
-
-#JSON Debugging
-#py Git2CSV.py --format json --overwrite_existing --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Debugs as expected and enters data to data.json)
-#py Git2CSV.py --format json --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Json output to data.json)
-#py Git2CSV.py --format json --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Raised Exception)
-#py Git2CSV.py --format json --debugging_level ERROR C:\Users\Whitt\hallewhittaker\FormatFuzzer data.json (Working: Raised Exception)
-
-#CSV Debugging
-#py Git2CSV.py --format csv --overwrite_existing --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Debugs as expected and enters output to TestCSV.csv)
-#py Git2CSV.py --format csv --overwrite_existing C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: CSV output to TestCSV,csv)
-#py Git2CSV.py --format csv --debugging_level DEBUG C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Raised Exception)
-#py Git2CSV.py --format csv --debugging_level ERROR C:\Users\Whitt\hallewhittaker\FormatFuzzer TestCSV.csv (Working: Raised Exception)
