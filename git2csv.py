@@ -173,7 +173,6 @@ change_output = False
 if change_output == True:
     output_type = f
 
-#CSV
 def open_csv(filename_csv):
     file0open = os.path.join(mydir_static_copy , filename_csv)
     with open(file0open, write_mode, encoding='ISO-8859-1', newline='') as output_type:
@@ -183,42 +182,40 @@ def open_csv(filename_csv):
 
 file1open= os.path.join(mydir_static_copy , output_file)
 isExist1= os.path.exists(file1open)
-if filepath != None and overwrite_boolean ==True and specified_format =="csv" and isExist1 ==True: #if format exists, and file doesnt exist, overwrite it
+if filepath != None and overwrite_boolean ==True and specified_format =="csv" and isExist1 ==True: 
     filename_csv = "TestCSV.csv"
     force_overwrite == True
     open_csv(filename_csv)
 
-if filepath != None and specified_format == None and filetype != "csv" and filetype != "json":  #no format or corresponding filetype, csv default format
+if filepath != None and specified_format == None and filetype != "csv" and filetype != "json": 
     filename_csv = output_file
     open_csv(filename_csv)
     
-if filepath != None and specified_format == "csv" and output_file == '-':  #stdout
+if filepath != None and specified_format == "csv" and output_file == '-':  
     writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames, lineterminator='\n')
     writer.writeheader()
     writer.writerows(rows)
 
-if filepath != None and specified_format == "csv" and isExist1 == False and output_file != '-':  # format csv and file doesnt exist, csv output to new file
+if filepath != None and specified_format == "csv" and isExist1 == False and output_file != '-':  
     filename_csv = output_file
     open_csv(filename_csv)
 
-elif filepath != None and specified_format == "csv" and list_of_files == None:  #format first priority 
+elif filepath != None and specified_format == "csv" and list_of_files == None:  
     filename_csv= "TestCSV.csv"
     open_csv(filename_csv)
     
-elif specified_format == "json": #if json, do nothing
+elif specified_format == "json": 
     None
 
-elif filepath != None and filetype == "csv": #filetype second priority
+elif filepath != None and filetype == "csv": 
     filename_csv = output_file
     open_csv(filename_csv)
 
-if filepath == None: #no arguments entered
+if filepath == None: 
     filename_csv = 'TestCSV.csv'
     change_output == True
     open_csv(filename_csv)
 
-
-#JSON
 def open_json(filename_json):
     file2open = os.path.join(mydir_static_copy , filename_json)
     with open (file2open, write_mode, encoding='ISO-8859-1', newline='')  as output_type:
@@ -226,31 +223,31 @@ def open_json(filename_json):
 
 file3open= os.path.join(mydir_static_copy , output_file)
 isExist2= os.path.exists(file3open)
-if filepath != None and overwrite_boolean ==True and specified_format =="json" and  isExist2==True: #if format exists, and file doesnt exist, overwrite it
+if filepath != None and overwrite_boolean ==True and specified_format =="json" and  isExist2==True: 
     filename_json = "data.json"
     force_overwrite == True
     open_json(filename_json)
 
-if filepath != None and specified_format == "json" and output_file == '-': #stdout
+if filepath != None and specified_format == "json" and output_file == '-': 
     sys.stdout.write(jsonstring)
     sys.stdout.close()
 
-if filepath != None and specified_format == "json" and isExist2 == False and output_file != '-': # format json and file doesnt exist, json output to new file. output_file ensures a new file called "-" isnt created
+if filepath != None and specified_format == "json" and isExist2 == False and output_file != '-': 
     filename_json = output_file
     open_json(filename_json)
 
-elif filepath != None and specified_format == "json" and list_of_files == None: #format priority 1, list_of_files usage ensures it outputs to filetype (skips this one) 
+elif filepath != None and specified_format == "json" and list_of_files == None: 
     filename_json= "data.json"
     open_json(filename_json) 
 
-elif specified_format == "csv": #do nothing if csv
+elif specified_format == "csv": 
     None
 
-elif filepath != None and filetype =="json":  #filetype priority 2
+elif filepath != None and filetype =="json":  
     filename_json= output_file
     open_json(filename_json) 
 
-if filepath == None: #no arguments entered
+if filepath == None: 
     filename_json= "data.json"
     change_output == True
     open_json(filename_json)
